@@ -1,0 +1,268 @@
+/*header*/
+
+/* ===========================
+   Layout base
+   =========================== */
+.contenedor {
+  max-width: 1200px;   /* ajustá a gusto */
+  margin: 0 auto;      /* centra el contenido */
+
+}
+
+/* ===========================
+   Header (wrapper full-width)
+   =========================== */
+.header {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--color-light);
+  position: sticky;   /* se mantiene arriba al hacer scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header a {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--primario);
+}
+
+.header img {
+    height: 90px;
+  }
+
+  .logo-burguer img {
+    height: 70px !important; 
+  }
+
+
+/* ===========================
+   Barra de contenido (fila)
+   =========================== */
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  padding: 0 1rem;
+  /* sin background aquí → el fondo viene del .header (full-width) */
+}
+
+/* ===========================
+   Logo y enlaces
+   =========================== */
+.logo,
+.navegacion-enlace {
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header .navegacion-enlace {
+  height: 5rem;
+}
+
+header .navegacion-enlace:hover {
+  transform: scale(1.02);
+  border-bottom: 3px solid var(--primario);
+  transition: transform 50ms ease; /* animación corta */
+}
+
+/* ===========================
+   Navegación (desktop)
+   =========================== */
+.navegacion {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Íconos / acciones a la derecha */
+.iconos-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconos-header i {
+  margin-left: 35px;
+}
+
+.iconos-header i:hover {
+  transform: scale(1.12);
+  transition: transform 50ms ease;
+}
+
+/* Enlace de sesión (icono) */
+.iniciar-sesion-icono i {
+  /* si usás <i> de FA, controlá con font-size en vez de width/height */
+  font-size: 18px;
+  color: var(--primario);
+}
+
+/* Links centrados (desktop) */
+.links-header {
+  display: flex;
+  justify-content: space-around;
+  width: 650px;   /* podés reemplazar por gap + flex-wrap si querés menos fijo */
+}
+
+/* Contenedor de login que aparece al final del menú móvil */
+#iniciarSesion {
+  display: none; /* oculto en desktop */
+}
+
+#btnIniciarSesion:hover {
+  cursor: pointer;
+}
+
+/* ===========================
+   Overlay (oscurece fondo en mobile)
+   =========================== */
+.overlay {
+  font-family: 'Montserrat', sans-serif;
+  position: fixed;
+  inset: 0;               /* top:0; right:0; bottom:0; left:0 */
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+  z-index: 1040;          /* debajo del panel del menú */
+  display: none;          /* oculto por defecto */
+}
+
+/* ===========================
+   Animaciones del panel móvil
+   =========================== */
+@keyframes slideInFromLeft {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutToLeft {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+
+/* ===========================
+   Responsivo intermedio
+   =========================== */
+@media (max-width: 975px) {
+  .links-header {
+    width: 500px;
+    /* justify-content: none;  ❌ no existe */
+    justify-content: space-around; 
+    gap: 1rem;
+  }
+  .links-header a {
+    font-size: 17px;
+  }
+}
+
+/* Por defecto ocultamos el logo del panel móvil en desktop */
+.logo-burguer {
+  display: none !important;
+}
+
+
+/* ===========================
+   Mobile (≤768px)
+   =========================== */
+.menu-toggle {            /* botón hamburguesa */
+  cursor: pointer;
+  display: none;          /* se muestra solo en mobile */
+}
+
+@media (max-width: 768px) {
+  .menu-toggle { display: block; }
+
+  /* Panel lateral */
+  .navegacion {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;        /* oculto por defecto */
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    width: 80%;
+    height: 100vh;
+    background: var(--primario);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    transition: transform .5s ease-out;
+
+  }
+
+  .navegacion.show {
+    display: flex;
+    background: var(--color-bg);
+    animation: slideInFromLeft .5s ease-out forwards;
+  }
+
+  .navegacion.hide {
+    animation: slideOutToLeft .5s ease-in forwards;
+  }
+
+  .navegacion-enlace {
+    justify-content: flex-start;
+    margin-left: 10px;
+  }
+
+  .links-header {
+    flex-direction: column;
+    width: 300px;
+    margin-top: 20px;
+    justify-content: space-around;
+  }
+
+  /* bloque “Iniciar sesión” al pie del panel */
+  #iniciarSesion {
+    margin-top: auto;
+    display: block;
+    border-top: 2px solid var(--primario);
+    padding-top: 10px;
+    width: 100%;
+  }
+
+  #iniciarSesion i { margin-right: 15px; }
+  #link-sesion {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  #iniciarSesion a { margin: 0; }
+
+  .iconos-header { width: 50px; }
+  .iconos-header i { margin-left: 0; }
+
+  /* Overlay visible cuando el menú está abierto */
+  .overlay.show { display: block; }
+
+  /* Logo dentro del panel móvil */
+  .logo-burguer { display: block !important; }
+}
+
+
+/* ===========================
+   Botón cerrar menú (X)
+   =========================== */
+.menu-close {
+  font-family: 'Montserrat', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 80%;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1051;
+  transition: transform .3s ease;
+  height: 7rem; /* puedes bajarlo si querés un hit-area menor */
+}
+.menu-close:hover { transform: scale(1.2); }
+
+@media (min-width: 768px) {
+  .menu-close { display: none; } /* solo mobile */
+}

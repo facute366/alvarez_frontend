@@ -1,0 +1,19 @@
+/* Reset mínimo */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+img { max-width: 100%; display: block; }
+
+:root {
+    --primario: #154ea2;
+    --blanco: #ffffff;
+    --fuenteHeading: "Poppins", sans-serif; /* Fuente similar a Flatory Sans para encabezados */
+    --fuenteParrafos: "Poppins", sans-serif; /* Fuente similar para párrafos */
+    --color-bg: #282927;
+    --color-black: #131313;
+    --color-light: #E6E6E6;
+}

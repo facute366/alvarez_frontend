@@ -1,0 +1,153 @@
+
+/* ======= FOOTER ======= */
+.footer {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: var(--color-black);
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 50px;
+    gap: 30px;
+    padding: 1rem;
+
+    justify-items: center; /* Centra cada columna */
+    text-align: center;    /* Centra el texto dentro */
+}
+
+
+.footer-section {
+    /* flex: 1 1 250px; */
+    text-align: center;
+    width: 90%;
+
+
+}
+
+.logo_footer{
+    display: flex;
+    justify-content: center;
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+
+
+
+.footer-section h3 {
+    color: var(--primario);
+    margin-bottom: 15px;
+    font-size: 25px !important;
+    font-weight: 600 !important;
+}
+
+
+.footer-section p {
+    margin: 5px 0;
+    font-size: 16px;
+    text-transform: none;
+    color: white;
+}
+
+.footer-section p:hover {
+    margin-right: 8px;
+    color: var(--primario);
+    transition: all 0.3s;
+}
+
+.footer-section i {
+    margin-right: 8px;
+    color: white;
+}
+
+.footer-section i:hover {
+    margin-right: 8px;
+    color: var(--primario);
+    transition: all 0.3s;
+}
+
+#agencia-info p:hover{
+  margin-right: 0 !important;
+  transition: none !important;
+  color: white !important;
+}
+
+.social-icons{
+  margin-left: 20px;
+}
+
+.social-icons a {
+    color: var(--primario);
+    margin-right: 10px;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--color-primary) !important;
+}
+
+.ml-logo {
+    margin-top: 10px;
+    width: 120px;
+}
+
+.map-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.derechos {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-light);
+  font-size: 14px;
+  padding: 10px;
+  background-color: var(--color-bg);
+}
+
+.derechos p{
+      margin-top: 10px;
+      text-align: center;
+}
+
+
+/* Responsive footer */
+@media (max-width: 768px) {
+    .footer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        flex: none;
+        width: 100%;
+    }
+    .derechos p{
+      font-size: 12px !important;
+      margin-top: 10px;
+    }
+    
+}
+
+.dividir_footer{
+  text-align: center;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
