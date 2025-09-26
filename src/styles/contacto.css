@@ -1,0 +1,371 @@
+/* ===========================
+   Contacto - Formulario + Info
+   =========================== */
+
+.contacto {
+  font-family: var(--fuenteParrafos);
+  background-color: #f8f9fa;
+  padding: 5rem 0;
+}
+
+.contacto .contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.contacto h2 {
+  font-family: var(--fuenteHeading);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primario);
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.contacto h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: var(--primario);
+  margin: 1rem auto;
+}
+
+/* ===========================
+   Grid Principal - CORREGIDO
+   =========================== */
+.contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: stretch; /* Cambio: de 'start' a 'stretch' para misma altura */
+}
+
+/* ===========================
+   Formulario de Contacto - CORREGIDO
+   =========================== */
+.formulario-section {
+  background: var(--blanco);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex; /* NUEVO: Flexbox para control de altura */
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.formulario-section h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.8rem;
+  color: var(--primario);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.formulario-contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-grupo label {
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.campo-grupo input,
+.campo-grupo textarea {
+  padding: 1rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--fuenteParrafos);
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.campo-grupo input:focus,
+.campo-grupo textarea:focus {
+  outline: none;
+  border-color: var(--primario);
+  background-color: var(--blanco);
+  box-shadow: 0 0 0 3px rgba(21, 78, 162, 0.1);
+}
+
+.campo-grupo textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-enviar {
+  background: var(--primario);
+  color: var(--blanco);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.btn-enviar:hover {
+  background: #0f3a7a;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(21, 78, 162, 0.3);
+}
+
+/* ===========================
+   Información de Contacto - CORREGIDO
+   =========================== */
+.info-contacto {
+  background: var(--blanco);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex; /* NUEVO: Flexbox para control de altura */
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-contacto h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.8rem;
+  color: var(--primario);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.contacto-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.contacto-item:last-of-type {
+  border-bottom: none;
+  margin-bottom: 2.5rem;
+}
+
+.contacto-icono {
+  background: var(--primario);
+  color: var(--blanco);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contacto-icono i {
+  font-size: 1.2rem;
+}
+
+.contacto-texto h4 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primario);
+  margin-bottom: 0.5rem;
+}
+
+.contacto-texto p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===========================
+   Redes Sociales
+   =========================== */
+.redes-sociales {
+  text-align: center;
+}
+
+.redes-sociales h4 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.2rem;
+  color: var(--primario);
+  margin-bottom: 1rem;
+}
+
+.redes-iconos {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.red-social {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--blanco);
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+}
+
+.red-social:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.facebook {
+  background: #1877f2;
+}
+
+.instagram {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.whatsapp {
+  background: #25d366;
+}
+
+/* ===========================
+   WhatsApp Flotante
+   =========================== */
+.whatsapp-flotante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.whatsapp-flotante a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: #25d366;
+  color: var(--blanco);
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-flotante a:hover {
+  background: #128c7e;
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  }
+}
+
+/* ===========================
+   Responsive - CORREGIDO
+   =========================== */
+@media (max-width: 968px) {
+  .contacto-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start; /* En mobile vuelve a 'start' */
+  }
+  
+  /* NUEVO: Reset flexbox en mobile */
+  .formulario-section,
+  .info-contacto {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .contacto {
+    padding: 3rem 0;
+  }
+  
+  .contacto h2 {
+    font-size: 2rem;
+  }
+  
+  .formulario-section,
+  .info-contacto {
+    padding: 2rem;
+    text-align: center; /* NUEVO: Centramos todo el contenido en mobile */
+  }
+  
+  .formulario-section h3,
+  .info-contacto h3 {
+    font-size: 1.5rem;
+  }
+  
+  .contacto-item {
+    flex-direction: column;
+    text-align: center;
+    align-items: center; /* NUEVO: Centramos los items */
+  }
+  
+  .contacto-icono {
+    align-self: center;
+  }
+  
+  /* NUEVO: Centramos el contenido de texto */
+  .contacto-texto {
+    text-align: center;
+  }
+  
+  .whatsapp-flotante {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .whatsapp-flotante a {
+    width: 55px;
+    height: 55px;
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .formulario-section,
+  .info-contacto {
+    padding: 1.5rem;
+    text-align: center; /* NUEVO: Aseguramos el centrado */
+  }
+  
+  .redes-iconos {
+    gap: 0.8rem;
+  }
+  
+  .red-social {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}

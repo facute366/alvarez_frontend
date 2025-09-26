@@ -1,0 +1,251 @@
+/* ===========================
+   Servicios - Parallax + Grid
+   =========================== */
+
+.servicios {
+  font-family: var(--fuenteParrafos);
+}
+
+/* ===========================
+   Parallax Hero Section
+   =========================== */
+.parallax-hero {
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+              url('/path/to/construccion-background.jpg') center/cover fixed;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 5%;
+  color: var(--blanco);
+  position: relative;
+}
+
+.parallax-content h2 {
+  font-family: var(--fuenteHeading);
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(21, 78, 162, 0.8); 
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.servicios-lista ul {
+  list-style: none;
+  padding: 0;
+}
+
+.servicios-lista li {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.servicios-lista li:nth-child(1) { animation-delay: 0.2s; }
+.servicios-lista li:nth-child(2) { animation-delay: 0.4s; }
+.servicios-lista li:nth-child(3) { animation-delay: 0.6s; }
+.servicios-lista li:nth-child(4) { animation-delay: 0.8s; }
+.servicios-lista li:nth-child(5) { animation-delay: 1.0s; }
+.servicios-lista li:nth-child(6) { animation-delay: 1.2s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================
+   Grid de Servicios
+   =========================== */
+.servicios-grid-section {
+  background-color: var(--blanco);
+  padding: 5rem 0;
+}
+
+.servicios-grid-section h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primario);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ===========================
+   Cards de Servicios
+   =========================== */
+.servicio-card {
+  background: var(--blanco);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.servicio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(21, 78, 162, 0.15);
+  border-color: var(--primario);
+}
+
+.servicio-imagen {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.servicio-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.servicio-card:hover .servicio-imagen img {
+  transform: scale(1.05);
+}
+
+.imagen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(21, 78, 162, 0.8), 
+    rgba(21, 78, 162, 0.6));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.servicio-card:hover .imagen-overlay {
+  opacity: 1;
+}
+
+/* ===========================
+   Información del Servicio
+   =========================== */
+.servicio-info {
+  padding: 2rem;
+  text-align: center;
+}
+
+.servicio-info h4 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primario);
+  margin-bottom: 1rem;
+}
+
+.servicio-info p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* ===========================
+   Botón WhatsApp
+   =========================== */
+.btn-whatsapp {
+  background: #25d366;
+  color: var(--blanco);
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-whatsapp:hover {
+  background: #128c7e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp i {
+  font-size: 1.2rem;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (max-width: 768px) {
+  .parallax-hero {
+    height: 80vh;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .parallax-content h2 {
+    font-size: 2.5rem;
+  }
+  
+  .servicios-lista li {
+    font-size: 1.1rem;
+  }
+  
+  .servicios-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .servicios-grid-section h3 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .parallax-content h2 {
+    font-size: 2rem;
+  }
+  
+  .servicios-lista li {
+    font-size: 1rem;
+  }
+  
+  .servicio-info {
+    padding: 1.5rem;
+  }
+  
+  .btn-whatsapp {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ===========================
+   Efecto Parallax para pantallas grandes
+   =========================== */
+@media (min-width: 768px) {
+  .parallax-hero {
+    background-attachment: fixed;
+  }
+}
