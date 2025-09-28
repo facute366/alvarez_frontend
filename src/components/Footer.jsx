@@ -14,65 +14,119 @@ export default function Footer() {
         />
       </div>
 
-      {/* Contenido */}
-      <div className="footer-split contenedor">
-        {/* Logo */}
-        <a href="/" className="logo_footer" aria-label="Inicio">
-          <img id="logo_footer" src="/assets/img/logo_horizontal.png" alt="Alvarez" />
-        </a>
-
-        {/* Grilla de secciones */}
-        <div className="footer-container">
-          {/* Datos de la empresa */}
-          <div id="agencia-info" className="footer-section">
-            <h3>Alvarez</h3>
-            <p>
-              <i className="fas fa-map-marker-alt" /> Andres Ratti 200, Rio Segundo
-            </p>
-            <p>
-              <i className="fas fa-phone-alt" /> <strong>Contacto:</strong> 3572 445578
-            </p>
-            <p>
-              <i className="fas fa-envelope" /> alvarezconstrucciones04@gmail.com
-            </p>
-          </div>
-
-          {/* Secciones */}
-          <div className="footer-section">
-            <h3>Secciones</h3>
-            <a href="/proyectos"><p><i className="fas fa-th-large" /> Proyectos</p></a>
-            <a href="#sobre-nosotros"><p><i className="fas fa-users" /> Nosotros</p></a>
-            <a href="#contacto"><p><i className="fas fa-envelope" /> Contacto</p></a>
-          </div>
-
-          {/* Redes */}
-          <div className="footer-section">
-            <h3>Seguinos en las redes</h3>
-            <div className="social-icons">
-              <a
-                href="https://www.instagram.com/alvarezconstruccionenseco/?hl=es"
-                target="_blank" rel="noreferrer"
-                aria-label="Instagram"
-              >
-                <i className="fab fa-instagram fa-2x" />
+      {/* Contenido Principal */}
+      <div className="footer-main">
+        <div className="contenedor">
+          <div className="footer-grid">
+            
+            {/* Logo y Descripción */}
+            <div className="footer-brand">
+              <a href="/" className="footer-logo" aria-label="Inicio">
+                <img src="/assets/img/logo_horizontal-removebg.png" alt="Alvarez Construcciones" />
               </a>
+              <p className="footer-description">
+                Especialistas en construcción en seco con más de 10 años de experiencia. 
+                Transformamos tus ideas en realidad con calidad y compromiso.
+              </p>
+              <div className="social-icons">
+                <a
+                  href="https://www.instagram.com/alvarezconstruccionenseco/?hl=es"
+                  target="_blank" 
+                  rel="noreferrer"
+                  aria-label="Instagram"
+                  className="social-link instagram"
+                >
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a
+                  href="https://wa.me/5493572445578"
+                  target="_blank" 
+                  rel="noreferrer"
+                  aria-label="WhatsApp"
+                  className="social-link whatsapp"
+                >
+                  <i className="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
 
-              <a
-                href="https://wa.me/5493572000000"
-                id="footerWpp"
-                target="_blank" rel="noreferrer"
-                aria-label="WhatsApp"
+            {/* Servicios */}
+            <div className="footer-section">
+              <h3>Servicios</h3>
+              <ul className="footer-links">
+                <li><a href="#servicios">Construcción en Seco</a></li>
+                <li><a href="#servicios">Ampliaciones</a></li>
+                <li><a href="#servicios">Locales Comerciales</a></li>
+                <li><a href="#servicios">Revestimientos</a></li>
+              </ul>
+            </div>
+
+            {/* Enlaces Rápidos */}
+            <div className="footer-section">
+              <h3>Enlaces</h3>
+              <ul className="footer-links">
+                <li><a href="/proyectos">Proyectos</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#beneficios">Beneficios</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+              </ul>
+            </div>
+
+            {/* Contacto */}
+            <div className="footer-section">
+              <h3>Contacto</h3>
+              <div className="contact-info">
+                <div className="contact-item">
+                  <i className="fas fa-map-marker-alt"></i>
+                  <div className="contact-text">
+                    <span>Andrés Ratti 200</span>
+                    <span>Río Segundo, Córdoba</span>
+                  </div>
+                </div>
+                <div className="contact-item">
+                  <i className="fas fa-phone-alt"></i>
+                  <div className="contact-text">
+                    <span>+54 3572 445578</span>
+                  </div>
+                </div>
+                <div className="contact-item">
+                  <i className="fas fa-envelope"></i>
+                  <div className="contact-text">
+                    <span>alvarezconstrucciones04@gmail.com</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* CTA WhatsApp */}
+              <a 
+                href="https://wa.me/5493572445578?text=Hola! Me interesa conocer más sobre sus servicios de construcción"
+                target="_blank" 
+                rel="noreferrer"
+                className="footer-cta"
               >
-                <i className="fab fa-whatsapp fa-2x" />
+                <i className="fab fa-whatsapp"></i>
+                Consulta Gratis
               </a>
             </div>
+
           </div>
         </div>
       </div>
 
-      {/* Derechos */}
-      <div className="derechos">
-        <p>© 2025 ALVAREZ construcción en seco. Todos los derechos reservados.</p>
+      {/* Footer Bottom */}
+      <div className="footer-bottom">
+        <div className="contenedor">
+          <div className="footer-bottom-content">
+            <p className="copyright">
+              © 2025 Alvarez Construcciones en Seco. Todos los derechos reservados.
+            </p>
+            <div className="footer-bottom-links">
+              <a href="#privacidad">Política de Privacidad</a>
+              <span className="separator">|</span>
+              <a href="#terminos">Términos y Condiciones</a>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );

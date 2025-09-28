@@ -1,115 +1,182 @@
 /* ===========================
-   Servicios - Parallax + Grid
+   Servicios - Diseño Minimalista Vertical
    =========================== */
 
 .servicios {
   font-family: var(--fuenteParrafos);
+  background-color: var(--blanco);
 }
 
 /* ===========================
-   Parallax Hero Section
+   Header Section
    =========================== */
-.parallax-hero {
-  height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-              url('/path/to/construccion-background.jpg') center/cover fixed;
+.servicios-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 6rem 0 4rem 0;
+  position: relative;
+}
+
+.servicios-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23154ea2" opacity="0.03"><polygon points="0,0 1000,80 1000,100 0,100"/></svg>');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.header-content {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.header-subtitle {
+  display: inline-block;
+  background: var(--primario);
+  color: var(--blanco);
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.servicios-header h2 {
+  font-family: var(--fuenteHeading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-black);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.servicios-header p {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* ===========================
+   Services List Section
+   =========================== */
+.servicios-lista-section {
+  padding: 6rem 0;
+}
+
+.servicio-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 6rem;
+  position: relative;
+}
+
+.servicio-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Línea conectora entre servicios */
+.servicio-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 40px;
+  top: 100%;
+  width: 2px;
+  height: 6rem;
+  background: linear-gradient(to bottom, var(--primario), transparent);
+  z-index: 1;
+}
+
+/* ===========================
+   Número del Servicio
+   =========================== */
+.servicio-numero {
+  font-family: var(--fuenteHeading);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--primario);
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 5%;
-  color: var(--blanco);
-  position: relative;
-}
-
-.parallax-content h2 {
-  font-family: var(--fuenteHeading);
-  font-size: 4rem;
-  font-weight: 700;
-  color: rgba(21, 78, 162, 0.8); 
-  margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-.servicios-lista ul {
-  list-style: none;
-  padding: 0;
-}
-
-.servicios-lista li {
-  font-size: 1.4rem;
-  font-weight: 400;
-  margin-bottom: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-  opacity: 0;
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.servicios-lista li:nth-child(1) { animation-delay: 0.2s; }
-.servicios-lista li:nth-child(2) { animation-delay: 0.4s; }
-.servicios-lista li:nth-child(3) { animation-delay: 0.6s; }
-.servicios-lista li:nth-child(4) { animation-delay: 0.8s; }
-.servicios-lista li:nth-child(5) { animation-delay: 1.0s; }
-.servicios-lista li:nth-child(6) { animation-delay: 1.2s; }
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===========================
-   Grid de Servicios
-   =========================== */
-.servicios-grid-section {
-  background-color: var(--blanco);
-  padding: 5rem 0;
-}
-
-.servicios-grid-section h3 {
-  font-family: var(--fuenteHeading);
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: var(--primario);
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.servicios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* ===========================
-   Cards de Servicios
-   =========================== */
-.servicio-card {
+  justify-content: center;
   background: var(--blanco);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
+  border: 3px solid var(--primario);
+  border-radius: 50%;
+  margin-right: 3rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
 }
 
-.servicio-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(21, 78, 162, 0.15);
-  border-color: var(--primario);
+/* ===========================
+   Contenido del Servicio
+   =========================== */
+.servicio-contenido {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 4rem;
+  align-items: center;
+  flex: 1;
 }
 
+.servicio-item.reverse .servicio-contenido {
+  grid-template-columns: 400px 1fr;
+}
+
+.servicio-texto h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: 1.5rem;
+}
+
+.servicio-texto p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.servicio-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.feature {
+  background: #f8f9fa;
+  color: var(--primario);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #e9ecef;
+}
+
+/* ===========================
+   Imagen del Servicio
+   =========================== */
 .servicio-imagen {
   position: relative;
-  height: 250px;
+  border-radius: 16px;
   overflow: hidden;
+  height: 300px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.servicio-imagen:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
 }
 
 .servicio-imagen img {
@@ -119,133 +186,813 @@
   transition: transform 0.3s ease;
 }
 
-.servicio-card:hover .servicio-imagen img {
+.servicio-imagen:hover img {
   transform: scale(1.05);
 }
 
-.imagen-overlay {
+.btn-consultar {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, 
-    rgba(21, 78, 162, 0.8), 
-    rgba(21, 78, 162, 0.6));
+  bottom: 20px;
+  right: 20px;
+  background: var(--primario);
+  color: var(--blanco);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(10px);
 }
 
-.servicio-card:hover .imagen-overlay {
+.servicio-imagen:hover .btn-consultar {
   opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-consultar:hover {
+  background: #0f3a7a;
+  transform: translateX(3px);
 }
 
 /* ===========================
-   Información del Servicio
+   CTA Section
    =========================== */
-.servicio-info {
-  padding: 2rem;
+.servicios-cta {
+  background: linear-gradient(135deg, var(--primario) 0%, #0f3a7a 100%);
+  padding: 4rem 0;
   text-align: center;
+  color: var(--blanco);
 }
 
-.servicio-info h4 {
+.cta-content h3 {
   font-family: var(--fuenteHeading);
-  font-size: 1.4rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.btn-cta {
+  background: #25d366;
+  color: var(--blanco);
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-cta:hover {
+  background: #128c7e;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+}
+
+/* ===========================
+   Proceso Section - BASE STYLES
+   =========================== */
+.proceso-section {
+  padding: 6rem 0;
+  background: #fafbfc;
+  position: relative;
+}
+
+.proceso-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.proceso-header h2 {
+  font-family: var(--fuenteHeading);
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: 1.5rem;
+}
+
+.proceso-header p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===========================
+   Timeline del Proceso
+   =========================== */
+.proceso-timeline {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.proceso-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--primario), rgba(21, 78, 162, 0.2));
+  transform: translateX(-50%);
+}
+
+.proceso-step {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5rem;
+  position: relative;
+}
+
+.proceso-step:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.proceso-step.last {
+  margin-bottom: 0;
+}
+
+/* Línea conectora (excepto el último) */
+.proceso-step:not(.last)::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 120px;
+  width: 2px;
+  height: 3rem;
+  background: rgba(21, 78, 162, 0.3);
+  transform: translateX(-50%);
+}
+
+/* ===========================
+   Número del Step
+   =========================== */
+.step-number {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--primario), #0f3a7a);
+  color: var(--blanco);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fuenteHeading);
+  font-size: 2.2rem;
+  font-weight: 900;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  box-shadow: 0 10px 25px rgba(21, 78, 162, 0.3);
+  border: 4px solid var(--blanco);
+}
+
+/* ===========================
+   Contenido del Step
+   =========================== */
+.step-content {
+  flex: 1;
+  background: var(--blanco);
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin: 0 3rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border: 2px solid #f0f2f5;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.step-content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(21, 78, 162, 0.12);
+  border-color: var(--primario);
+}
+
+.step-content h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 1.6rem;
   font-weight: 600;
   color: var(--primario);
   margin-bottom: 1rem;
 }
 
-.servicio-info p {
-  font-size: 1rem;
-  line-height: 1.6;
+.step-content p {
   color: #666;
-  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.step-icon {
+  position: absolute;
+  top: -15px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  background: var(--blanco);
+  border: 3px solid var(--primario);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(21, 78, 162, 0.2);
+}
+
+.step-icon i {
+  font-size: 1.2rem;
+  color: var(--primario);
+}
+
+/* Flecha para indicar dirección (solo en desktop) */
+.proceso-step:nth-child(odd) .step-content::after {
+  content: '';
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 15px 0 15px 15px;
+  border-color: transparent transparent transparent var(--blanco);
+}
+
+.proceso-step:nth-child(even) .step-content::after {
+  content: '';
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 15px 15px 15px 0;
+  border-color: transparent var(--blanco) transparent transparent;
 }
 
 /* ===========================
-   Botón WhatsApp
+   CTA del Proceso
    =========================== */
-.btn-whatsapp {
-  background: #25d366;
+.proceso-cta {
+  text-align: center;
+  margin-top: 5rem;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(21, 78, 162, 0.05), rgba(21, 78, 162, 0.02));
+  border-radius: 20px;
+  border: 2px solid rgba(21, 78, 162, 0.1);
+}
+
+.proceso-cta h3 {
+  font-family: var(--fuenteHeading);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: 2rem;
+}
+
+.btn-proceso {
+  background: linear-gradient(135deg, var(--primario), #0f3a7a);
   color: var(--blanco);
   border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 25px;
-  font-size: 1rem;
+  padding: 1.2rem 3rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   transition: all 0.3s ease;
-  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 25px rgba(21, 78, 162, 0.3);
 }
 
-.btn-whatsapp:hover {
-  background: #128c7e;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-}
-
-.btn-whatsapp i {
-  font-size: 1.2rem;
+.btn-proceso:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(21, 78, 162, 0.4);
+  background: linear-gradient(135deg, #0f3a7a, var(--primario));
 }
 
 /* ===========================
-   Responsive
+   Responsive Design - MEJORADO
    =========================== */
-@media (max-width: 768px) {
-  .parallax-hero {
-    height: 80vh;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    justify-content: center;
-    text-align: center;
+
+/* Tablets grandes */
+@media (max-width: 1024px) {
+  .servicio-contenido {
+    grid-template-columns: 1fr 350px;
+    gap: 3rem;
   }
   
-  .parallax-content h2 {
+  .servicio-item.reverse .servicio-contenido {
+    grid-template-columns: 350px 1fr;
+  }
+  
+  .proceso-timeline {
+    max-width: 800px;
+  }
+  
+  .step-content {
+    margin: 0 2rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .servicios {
+    overflow-x: hidden;
+  }
+  
+  /* Header Section */
+  .servicios-header {
+    padding: 4rem 0 3rem 0;
+  }
+  
+  .servicios-header h2 {
+    font-size: 2.2rem;
+    padding: 0 1rem;
+  }
+  
+  .servicios-header p {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+  
+  .header-subtitle {
+    font-size: 0.85rem;
+    padding: 0.4rem 1.2rem;
+  }
+  
+  /* Services List */
+  .servicios-lista-section {
+    padding: 4rem 0;
+  }
+  
+  .servicio-item {
+    flex-direction: column;
+    margin-bottom: 4rem;
+    padding: 0 1rem;
+  }
+  
+  .servicio-item::after {
+    display: none;
+  }
+  
+  .servicio-numero {
+    margin-right: 0;
+    margin-bottom: 2rem;
+    align-self: center;
+    width: 70px;
+    height: 70px;
     font-size: 2.5rem;
   }
   
-  .servicios-lista li {
-    font-size: 1.1rem;
-  }
-  
-  .servicios-grid {
+  .servicio-contenido {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
   
-  .servicios-grid-section h3 {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .parallax-content h2 {
-    font-size: 2rem;
+  .servicio-item.reverse .servicio-contenido {
+    grid-template-columns: 1fr;
   }
   
-  .servicios-lista li {
+  .servicio-imagen {
+    height: 250px;
+    order: 1;
+  }
+  
+  .servicio-texto {
+    text-align: center;
+    order: 2;
+  }
+  
+  .servicio-texto h3 {
+    font-size: 1.6rem;
+  }
+  
+  .servicio-texto p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .servicio-features {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  
+  .feature {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .btn-consultar {
+    position: static;
+    opacity: 1;
+    transform: none;
+    margin-top: 1rem;
+    align-self: center;
+  }
+  
+  /* CTA Section */
+  .servicios-cta {
+    padding: 3rem 0;
+    margin: 0 1rem;
+    border-radius: 20px;
+  }
+  
+  .cta-content h3 {
+    font-size: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .cta-content p {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+  
+  .btn-cta {
+    padding: 0.9rem 2rem;
     font-size: 1rem;
   }
   
-  .servicio-info {
-    padding: 1.5rem;
+  /* Proceso Section */
+  .proceso-section {
+    padding: 4rem 0;
   }
   
-  .btn-whatsapp {
-    padding: 0.7rem 1.5rem;
-    font-size: 0.9rem;
+  .proceso-header {
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+  }
+  
+  .proceso-header h2 {
+    font-size: 2.2rem;
+  }
+  
+  .proceso-header p {
+    font-size: 1.1rem;
+  }
+  
+  .proceso-timeline {
+    padding: 0 1rem;
+  }
+  
+  .proceso-timeline::before {
+    left: 50px;
+  }
+  
+  .proceso-step {
+    flex-direction: row !important;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+  }
+  
+  .proceso-step::after {
+    left: 50px !important;
+    height: 2rem;
+  }
+  
+  .step-number {
+    width: 80px;
+    height: 80px;
+    font-size: 1.8rem;
+    margin-right: 2rem;
+  }
+  
+  .step-content {
+    margin: 0;
+    padding: 2rem 1.5rem;
+  }
+  
+  .step-content::after {
+    display: none;
+  }
+  
+  .step-content h3 {
+    font-size: 1.4rem;
+  }
+  
+  .step-content p {
+    font-size: 0.95rem;
+  }
+  
+  .step-icon {
+    top: -10px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .step-icon i {
+    font-size: 1rem;
+  }
+  
+  .proceso-cta {
+    padding: 2rem;
+    margin: 0 1rem;
+  }
+  
+  .proceso-cta h3 {
+    font-size: 1.6rem;
+  }
+  
+  .btn-proceso {
+    padding: 1rem 2rem;
+    font-size: 1rem;
   }
 }
 
-/* ===========================
-   Efecto Parallax para pantallas grandes
-   =========================== */
-@media (min-width: 768px) {
-  .parallax-hero {
-    background-attachment: fixed;
+/* Móviles */
+@media (max-width: 480px) {
+  /* Header Section */
+  .servicios-header {
+    padding: 3rem 0 2rem 0;
+  }
+  
+  .servicios-header h2 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+  
+  .servicios-header p {
+    font-size: 1rem;
+  }
+  
+  .header-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  /* Services List */
+  .servicios-lista-section {
+    padding: 3rem 0;
+  }
+  
+  .servicio-item {
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+  }
+  
+  .servicio-numero {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .servicio-contenido {
+    gap: 1.5rem;
+  }
+  
+  .servicio-imagen {
+    height: 220px;
+    border-radius: 12px;
+  }
+  
+  .servicio-texto h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .servicio-texto p {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .servicio-features {
+    gap: 0.6rem;
+  }
+  
+  .feature {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+  
+  .btn-consultar {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+    gap: 0.4rem;
+  }
+  
+  /* CTA Section */
+  .servicios-cta {
+    padding: 2.5rem 1rem;
+  }
+  
+  .cta-content h3 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+  
+  .cta-content p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-cta {
+    padding: 0.8rem 1.8rem;
+    font-size: 0.9rem;
+    gap: 0.6rem;
+  }
+  
+  /* Proceso Section */
+  .proceso-section {
+    padding: 3rem 0;
+  }
+  
+  .proceso-header {
+    margin-bottom: 2.5rem;
+  }
+  
+  .proceso-header h2 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+  
+  .proceso-header p {
+    font-size: 1rem;
+  }
+  
+  .proceso-timeline::before {
+    left: 40px;
+  }
+  
+  .proceso-step {
+    margin-bottom: 2.5rem;
+  }
+  
+  .proceso-step::after {
+    left: 40px !important;
+    height: 1.5rem;
+  }
+  
+  .step-number {
+    width: 70px;
+    height: 70px;
+    font-size: 1.5rem;
+    margin-right: 1.5rem;
+  }
+  
+  .step-content {
+    padding: 1.8rem 1.2rem;
+  }
+  
+  .step-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .step-content p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .step-icon {
+    top: -8px;
+    right: 12px;
+    width: 35px;
+    height: 35px;
+    border-width: 2px;
+  }
+  
+  .step-icon i {
+    font-size: 0.9rem;
+  }
+  
+  .proceso-cta {
+    padding: 2rem 1rem;
+  }
+  
+  .proceso-cta h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-proceso {
+    padding: 0.9rem 1.8rem;
+    font-size: 0.9rem;
+    gap: 0.8rem;
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  .servicios-header {
+    padding: 2.5rem 0 2rem 0;
+  }
+  
+  .servicios-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .servicios-header p {
+    font-size: 0.95rem;
+  }
+  
+  .servicio-item {
+    padding: 0 0.5rem;
+  }
+  
+  .servicio-numero {
+    width: 55px;
+    height: 55px;
+    font-size: 1.8rem;
+  }
+  
+  .servicio-imagen {
+    height: 200px;
+  }
+  
+  .servicio-texto h3 {
+    font-size: 1.2rem;
+  }
+  
+  .servicio-texto p {
+    font-size: 0.9rem;
+    padding: 0;
+  }
+  
+  .feature {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+  }
+  
+  .btn-consultar {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .servicios-cta {
+    padding: 2rem 0.8rem;
+  }
+  
+  .cta-content h3 {
+    font-size: 1.4rem;
+  }
+  
+  .btn-cta {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .proceso-timeline::before {
+    left: 35px;
+  }
+  
+  .proceso-step::after {
+    left: 35px !important;
+  }
+  
+  .step-number {
+    width: 60px;
+    height: 60px;
+    font-size: 1.3rem;
+    margin-right: 1.2rem;
+  }
+  
+  .step-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .step-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .step-content p {
+    font-size: 0.85rem;
+  }
+  
+  .step-icon {
+    width: 30px;
+    height: 30px;
+    top: -6px;
+    right: 10px;
+  }
+  
+  .step-icon i {
+    font-size: 0.8rem;
+  }
+  
+  .btn-proceso {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
   }
 }

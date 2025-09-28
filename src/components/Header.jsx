@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/header.css"; // importa tus estilos
+import { Link } from 'react-router-dom';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -65,7 +66,7 @@ export default function Header() {
 
           {/* Logo */}
           <a href="/" className="logo" title="Volver a la página de inicio">
-            <img src="/assets/img/logo_header.png" alt="Alvarez Logo" />
+            <img src="/assets/img/logo_horizontal-removebg.png" alt="Alvarez Logo" />
           </a>
 
           {/* Overlay mobile */}
@@ -89,7 +90,7 @@ export default function Header() {
 
             <div className="links-header">
               <a className="navegacion-enlace" href="/">Inicio</a>
-              <a className="navegacion-enlace" href="/proyectos">Proyectos</a>
+              <Link to="/proyectos" className="navegacion-enlace">Proyectos</Link>
               <a className="navegacion-enlace" href="#sobre-nosotros">Sobre Nosotros</a>
               <a className="navegacion-enlace" href="#contacto" title="Contacto">Contacto</a>
             </div>
