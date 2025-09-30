@@ -227,7 +227,7 @@ export function useAdminGuard() {
   const navigate = useNavigate();
   useEffect(() => {
     if (window.location.pathname === '/admin' && !isLoggedIn()) {
-      navigate('/sesion', { replace: true });
+      navigate('/login', { replace: true });
     }
   }, [navigate]);
 }
