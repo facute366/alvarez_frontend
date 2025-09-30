@@ -1,6 +1,14 @@
 import "../styles/footer.css";
+import { useLocation } from "react-router-dom";
 
 export default function Footer() {
+  const location = useLocation();
+  const hideFooter =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/carrusel-admin");
+
+  if (hideFooter) return null; // No renderiza nada en esas rutas
+
   return (
     <footer className="footer">
       {/* Mapa */}
@@ -18,20 +26,22 @@ export default function Footer() {
       <div className="footer-main">
         <div className="contenedor">
           <div className="footer-grid">
-            
             {/* Logo y Descripción */}
             <div className="footer-brand">
               <a href="/" className="footer-logo" aria-label="Inicio">
-                <img src="/assets/img/logo_horizontal-removebg.png" alt="Alvarez Construcciones" />
+                <img
+                  src="/assets/img/logo_horizontal-removebg.png"
+                  alt="Alvarez Construcciones"
+                />
               </a>
               <p className="footer-description">
-                Especialistas en construcción en seco con más de 10 años de experiencia. 
+                Especialistas en construcción en seco con más de 10 años de experiencia.
                 Transformamos tus ideas en realidad con calidad y compromiso.
               </p>
               <div className="social-icons">
                 <a
                   href="https://www.instagram.com/alvarezconstruccionenseco/?hl=es"
-                  target="_blank" 
+                  target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram"
                   className="social-link instagram"
@@ -40,7 +50,7 @@ export default function Footer() {
                 </a>
                 <a
                   href="https://wa.me/5493572445578"
-                  target="_blank" 
+                  target="_blank"
                   rel="noreferrer"
                   aria-label="WhatsApp"
                   className="social-link whatsapp"
@@ -96,11 +106,11 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-              
+
               {/* CTA WhatsApp */}
-              <a 
+              <a
                 href="https://wa.me/5493572445578?text=Hola! Me interesa conocer más sobre sus servicios de construcción"
-                target="_blank" 
+                target="_blank"
                 rel="noreferrer"
                 className="footer-cta"
               >
@@ -108,7 +118,6 @@ export default function Footer() {
                 Consulta Gratis
               </a>
             </div>
-
           </div>
         </div>
       </div>

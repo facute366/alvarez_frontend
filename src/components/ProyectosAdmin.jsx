@@ -4,8 +4,10 @@ import Swal from 'sweetalert2';
 import { useAdminGuard } from './Login';
 
 
+
 function ProyectosAdmin() {
    useAdminGuard(); // ← esto protege /admin
+
   // Estados principales
   const [activeTab, setActiveTab] = useState('proyectos');
   const [loading, setLoading] = useState(false);
@@ -291,6 +293,7 @@ function ProyectosAdmin() {
   };
 
   return (
+    
     <div className="admin-container">
       <div className="admin-header">
         <h1>Panel de Administración</h1>
