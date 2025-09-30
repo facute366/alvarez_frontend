@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import GaleriaModal from "./GaleriaModal"; // ← Agregar este import
 import "../styles/proyectos.css";
 
 function Proyectos() {
@@ -7,6 +8,10 @@ function Proyectos() {
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoriaActiva, setCategoriaActiva] = useState(searchParams.get('categoria') || 'todos');
+
+// Estados para el modal ← Agregar estos estados
+  const [modalOpen, setModalOpen] = useState(false);
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState(null);
 
   // Simulación de datos (reemplazar con API call)
   useEffect(() => {
@@ -103,6 +108,18 @@ function Proyectos() {
     }
   };
 
+  // Función para abrir el modal
+  const abrirModal = (proyecto) => {
+    setProyectoSeleccionado(proyecto);
+    setModalOpen(true);
+  };
+
+  // Función para cerrar el modal
+  const cerrarModal = () => {
+    setModalOpen(false);
+    setProyectoSeleccionado(null);
+  };
+
   if (loading) {
     return (
       <div className="proyectos-page">
@@ -129,7 +146,7 @@ function Proyectos() {
           </div>
           
           <h1>Nuestros Proyectos</h1>
-          <p>Explora nuestra galería completa con más de 500 obras realizadas a lo largo de 25 años de experiencia</p>
+          <p>Explora nuestra galería completa con más de 500 obras realizadas a lo largo de 5 años de experiencia</p>
         </div>
 
         {/* Filtros */}
@@ -164,10 +181,10 @@ function Proyectos() {
         <div className="proyectos-full-grid">
           {proyectosFiltrados.map(proyecto => (
             <div key={proyecto.id} className="proyecto-card-full">
-              <div className="proyecto-imagen-container">
+              <div className="proyecto-imagen-container" onClick={() => abrirModal(proyecto)} style={{cursor: 'pointer'}}>
                 <img src={proyecto.fotos[0]} alt={proyecto.titulo} />
                 <div className="imagen-overlay">
-                  <button className="btn-ver-galeria">
+                  <button className="btn-ver-galeria" onClick={(e) => { e.stopPropagation(); abrirModal(proyecto); }}>
                     <i className="fas fa-images"></i>
                     <span>Ver Galería ({proyecto.fotos.length})</span>
                   </button>
@@ -204,7 +221,7 @@ function Proyectos() {
                 <p className="proyecto-descripcion">{proyecto.descripcion}</p>
                 
                 <div className="proyecto-actions">
-                  <button className="btn-ver-detalle">
+                  <button className="btn-ver-detalle" onClick={() => abrirModal(proyecto)}>
                     <i className="fas fa-eye"></i>
                     Ver Detalles
                   </button>
@@ -236,7 +253,7 @@ function Proyectos() {
         {/* CTA Bottom */}
         <div className="proyectos-bottom-cta">
           <h2>¿No encontraste lo que buscabas?</h2>
-          <p>Contáctanos y cuéntanos sobre tu proyecto. Tenemos más de 500 obras realizadas.</p>
+          <p>Contáctanos y cuéntanos sobre tu proyecto. Tenemos más de 100 obras realizadas.</p>
           <button 
             className="btn-contactar"
             onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me gustaría consultar sobre un proyecto personalizado', '_blank')}
@@ -247,6 +264,13 @@ function Proyectos() {
         </div>
 
       </div>
+
+      {/* Modal de Galería */}
+      <GaleriaModal 
+        proyecto={proyectoSeleccionado}
+        isOpen={modalOpen}
+        onClose={cerrarModal}
+      />
     </div>
   );
 }

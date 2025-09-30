@@ -50,7 +50,7 @@
    Footer Main Content
    =========================== */
 .footer-main {
-  padding: 5rem 0 3rem 0;
+  padding: 5rem 2rem 3rem 2rem;
   position: relative;
   z-index: 1;
 }
@@ -332,6 +332,10 @@
 
 /* Tablets */
 @media (max-width: 768px) {
+  .footer .contenedor {
+    padding: 0 1.5rem;
+  }
+  
   .map-container {
     height: 220px;
   }
@@ -378,6 +382,10 @@
 
 /* Móviles */
 @media (max-width: 480px) {
+  .footer .contenedor {
+    padding: 0 2rem;
+  }
+  
   .map-container {
     height: 200px;
   }
@@ -429,15 +437,17 @@
   }
   
   .contact-item {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    text-align: left;
     padding: 1rem 0.8rem;
+    justify-content: flex-start;
   }
   
   .contact-item i {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1.3rem;
+    margin-right: 1rem;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    margin-top: 2px;
   }
   
   .contact-text span {
@@ -472,6 +482,10 @@
 
 /* Móviles muy pequeños */
 @media (max-width: 360px) {
+  .footer .contenedor {
+    padding: 0 1.5rem;
+  }
+  
   .footer-main {
     padding: 2rem 0 1rem 0;
   }

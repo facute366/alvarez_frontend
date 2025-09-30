@@ -9,20 +9,20 @@ function SobreNosotros() {
         <div className="contenedor">
           <div className="hero-content">
             <div className="hero-text">
-              <span className="hero-badge">Desde 1995</span>
+              <span className="hero-badge">Desde 2020</span>
               <h1>Construyendo el futuro con pasión y experiencia</h1>
               <p>
-                Más de 25 años transformando sueños en realidad, creando espacios 
+                Más de 5 años transformando sueños en realidad, creando espacios 
                 que inspiran y perduran en el tiempo.
               </p>
             </div>
             <div className="hero-stats">
               <div className="stat-item">
-                <div className="stat-number-nosotros">25+</div>
+                <div className="stat-number-nosotros">5+</div>
                 <div className="stat-label-nosotros">Años de Experiencia</div>
               </div>
               <div className="stat-item">
-                <div className="stat-number-nosotros">500+</div>
+                <div className="stat-number-nosotros">100+</div>
                 <div className="stat-label-nosotros">Proyectos Completados</div>
               </div>
               <div className="stat-item">
@@ -126,7 +126,7 @@ function SobreNosotros() {
               <div className="imagen-principal">
                 <img src="/path/to/equipo.jpg" alt="Equipo Alvarez" />
                 <div className="imagen-badge">
-                  <span>+25 años</span>
+                  <span>+5 años</span>
                   <small>construyendo juntos</small>
                 </div>
               </div>

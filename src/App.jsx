@@ -7,6 +7,8 @@ import ProyectosRealizados from "./components/ProyectosRealizados";
 import BeneficiosConstruccion from './components/BeneficiosConstruccion';
 import Contacto from "./components/Contacto";
 import Proyectos from "./components/Proyectos";
+import ProyectosAdmin from './components/ProyectosAdmin';
+import Login from './components/Login';
 import "./App.css";
 
 function HomePage() {
@@ -26,12 +28,20 @@ function HomePage() {
 function App() {
   return (
     <Router>
-      <Header />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/proyectos" element={<Proyectos />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/*" element={
+          <>
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/proyectos" element={<Proyectos />} />
+              <Route path="/admin" element={<ProyectosAdmin />} />
+            </Routes>
+            <Footer />
+          </>
+        } />
       </Routes>
-      <Footer />
     </Router>
   );
 }
