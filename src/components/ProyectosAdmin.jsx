@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import '../styles/proyectosAdmin.css';
 import Swal from 'sweetalert2';
+import { useAdminGuard } from './Login';
+
 
 function ProyectosAdmin() {
+   useAdminGuard(); // ← esto protege /admin
   // Estados principales
   const [activeTab, setActiveTab] = useState('proyectos');
   const [loading, setLoading] = useState(false);

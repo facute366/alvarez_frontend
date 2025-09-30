@@ -17,65 +17,82 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validaciones básicas
-    if (!formData.usuario.trim() || !formData.clave.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Campos vacíos!',
-        text: 'Por favor, completa todos los campos.',
+// Reemplaza solo esta función dentro de src/components/Login.jsx
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Validaciones básicas
+  const usuario = formData.usuario.trim();
+  const clave = formData.clave.trim();
+
+  if (!usuario || !clave) {
+    Swal.fire({
+      icon: 'warning',
+      title: '¡Campos vacíos!',
+      text: 'Por favor, completa todos los campos.',
+      confirmButtonColor: '#154ea2',
+      background: '#ffffff',
+      color: '#333'
+    });
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    const response = await fetch('https://alvarez-back.vercel.app/usuarios/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // El backend espera { usuario, password } igual que MCL
+      body: JSON.stringify({ usuario, password: clave })
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (response.ok && data?.token) {
+      // Guardar token y estado de sesión (igual que en MCL)
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('loggedIn', 'true');
+
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: 'Inicio de sesión exitoso',
         confirmButtonColor: '#154ea2',
         background: '#ffffff',
-        color: '#333'
+        timer: 1500,
+        timerProgressBar: true,
+        showConfirmButton: false
       });
-      return;
-    }
 
-    setIsLoading(true);
-
-    try {
-      // Simulación de llamada a API (reemplazar con tu lógica real)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Ejemplo de validación simple (reemplazar con tu lógica real)
-      if (formData.usuario === 'admin' && formData.clave === '123456') {
-        Swal.fire({
-          icon: 'success',
-          title: '¡Bienvenido!',
-          text: 'Inicio de sesión exitoso',
-          confirmButtonColor: '#154ea2',
-          background: '#ffffff',
-          timer: 2000,
-          showConfirmButton: false
-        }).then(() => {
-          // Aquí puedes redirigir o manejar el estado de autenticación
-          console.log('Usuario autenticado');
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error de autenticación',
-          text: 'Usuario o contraseña incorrectos',
-          confirmButtonColor: '#154ea2',
-          background: '#ffffff',
-          color: '#333'
-        });
-      }
-    } catch (error) {
+      // Redirección: ajustá la ruta según tu router.
+      // Tengo en cuenta que tenés ProyectosAdmin.jsx
+      window.location.href = '/admin';
+    } else {
       Swal.fire({
         icon: 'error',
-        title: 'Error del servidor',
-        text: 'Ha ocurrido un error. Inténtalo nuevamente.',
+        title: 'Error de autenticación',
+        text: data?.error || 'Usuario o contraseña incorrectos',
         confirmButtonColor: '#154ea2',
         background: '#ffffff',
         color: '#333'
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  } catch (error) {
+    console.error('Error durante el login:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error del servidor',
+      text: 'Ha ocurrido un error. Inténtalo nuevamente.',
+      confirmButtonColor: '#154ea2',
+      background: '#ffffff',
+      color: '#333'
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="login-container">
@@ -195,4 +212,22 @@ export default function Login() {
       </div>
     </div>
   );
+}
+
+// --- Helpers de sesión (pueden vivir aquí mismo) ---
+export const isLoggedIn = () =>
+  localStorage.getItem('loggedIn') === 'true' &&
+  !!localStorage.getItem('authToken');
+
+// Hook para proteger /admin (definido acá, reutilizado allá)
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export function useAdminGuard() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (window.location.pathname === '/admin' && !isLoggedIn()) {
+      navigate('/sesion', { replace: true });
+    }
+  }, [navigate]);
 }
