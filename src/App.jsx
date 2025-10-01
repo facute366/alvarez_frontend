@@ -11,12 +11,14 @@ import ProyectosAdmin from './components/ProyectosAdmin';
 import Login from './components/Login';
 import "./App.css";
 import CarruselAdmin from './components/CarruselAdmin';
+import CarruselPublic from './components/CarruselPublic';
 
 function HomePage() {
   return (
     <main>
       <h1>Bienvenido a Alvarez</h1>
       <p>Este es el inicio de la página.</p>
+      <CarruselPublic />
       <Nosotros />
       <Servicios />
       <ProyectosRealizados />
