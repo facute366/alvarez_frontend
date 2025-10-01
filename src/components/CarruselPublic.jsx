@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import '../styles/CarruselAdmin.css';
+import '../styles/carruselAdmin.css';
 
 const API = 'https://alvarez-back.vercel.app';
 

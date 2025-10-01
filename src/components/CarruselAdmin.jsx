@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import fetchWithAuth from '../lib/fetchWithAuth';
-import '../styles/CarruselAdmin.css';
+import '../styles/carruselAdmin.css';
 
 const API = 'https://alvarez-back.vercel.app';
 
