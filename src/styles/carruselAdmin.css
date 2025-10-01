@@ -1,0 +1,89 @@
+:root{
+  /* Colores Alvarez */
+  --alvarez-primary: #154ea2;
+  --alvarez-accent: #43b66c;
+}
+
+.carousel-editor{
+  font-family: 'Montserrat', sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+}
+
+/* Evitamos chocar con .form-control de Bootstrap */
+.carousel-input{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  width: 100% !important;
+  font-size: 15px !important;
+}
+
+#btnsImgCarousel{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 24px;
+}
+
+#btnsImgCarousel button{
+  font-size: 12px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 8px 14px;
+}
+
+/* Botones */
+#addImageBtn{
+  background-color: var(--alvarez-accent);
+}
+
+#deleteImageBtn{
+  background-color: var(--alvarez-primary) !important;
+}
+
+/* Imagen del carrusel */
+.carousel-editor .carousel .carousel-item img{
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px){
+  #addImageBtn, #deleteImageBtn{
+    width: 180px;
+    padding: 6px 10px;
+    font-size: 11px !important;
+  }
+}
+
+.carousel-item img {
+  width: 100% !important;       /* siempre ocupa todo el ancho */
+  height: auto;      /* alto automático según proporción */
+  display: block;    /* elimina espacios en blanco */
+}
+
+#carouselExampleFade{
+    width: 100% !important;
+}
+
+.carousel-editor {
+  background: #fff;      /* fondo blanco */
+  padding: 20px 0;       /* un poco de aire arriba y abajo */
+}
+
+.carousel-editor input[type="file"] {
+  background: #f9f9f9;   /* fondo clarito al input */
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  width: 80% !important;  /* ocupa casi todo el ancho */
+}

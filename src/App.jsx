@@ -10,6 +10,7 @@ import Proyectos from "./components/Proyectos";
 import ProyectosAdmin from './components/ProyectosAdmin';
 import Login from './components/Login';
 import "./App.css";
+import CarruselAdmin from './components/CarruselAdmin';
 
 function HomePage() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/proyectos" element={<Proyectos />} />
               <Route path="/admin" element={<ProyectosAdmin />} />
+              <Route path="/carrusel-admin" element={<CarruselAdmin />} />
             </Routes>
             <Footer />
           </>
