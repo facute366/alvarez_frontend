@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import '../styles/proyectosAdmin.css';
 import Swal from 'sweetalert2';
 import { useAdminGuard } from './Login';
+import fetchWithAuth from '../lib/fetchWithAuth';
 
-
+const API = 'https://alvarez-back.vercel.app';
+const USE_MULTIPART = true; // ponelo en false si tu backend aún no acepta archivos
 
 function ProyectosAdmin() {
-   useAdminGuard(); // ← esto protege /admin
+  useAdminGuard(); // protege /admin
 
   // Estados principales
   const [activeTab, setActiveTab] = useState('proyectos');
   const [loading, setLoading] = useState(false);
-  
+
   // Estados para proyectos
   const [proyectos, setProyectos] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -20,115 +22,209 @@ function ProyectosAdmin() {
     titulo: '',
     descripcion: '',
     categoria_id: '',
-    es_oculto: false
+    es_oculto: false,
   });
   const [editingProyecto, setEditingProyecto] = useState(null);
   const [fotosSeleccionadas, setFotosSeleccionadas] = useState([]);
 
-  // Estados para categorías
+  // Estados para categorías (sin descripción)
   const [categoriaForm, setCategoriaForm] = useState({
     id: '',
     nombre: '',
-    descripcion: ''
   });
   const [editingCategoria, setEditingCategoria] = useState(null);
 
-  // Cargar datos iniciales
   useEffect(() => {
-    cargarProyectos();
     cargarCategorias();
+    cargarProyectos();
   }, []);
 
-  // ===========================
-  // FUNCIONES DE PROYECTOS
-  // ===========================
+  // ============ Helper: fetch con auth y manejo de errores ============
+  async function api(path, options = {}) {
+    const url = `${API}${path}`;
+    const res = await fetchWithAuth(url, options);
 
-  const cargarProyectos = async () => {
-    setLoading(true);
-    try {
-      // Simulación de API call - reemplazar con tu endpoint
-      const proyectosEjemplo = [
-        {
-          id: 1,
-          titulo: "Casa Moderna en Nordelta",
-          descripcion: "Construcción integral de vivienda unifamiliar",
-          categoria_id: 1,
-          categoria: { nombre: "Residencial" },
-          es_oculto: false,
-          fotos: ['foto1.jpg', 'foto2.jpg']
-        },
-        {
-          id: 2,
-          titulo: "Oficinas Corporativas",
-          descripcion: "Remodelación completa de espacios",
-          categoria_id: 2,
-          categoria: { nombre: "Comercial" },
-          es_oculto: false,
-          fotos: ['foto3.jpg']
-        }
-      ];
-      setProyectos(proyectosEjemplo);
-    } catch (error) {
-      mostrarError('Error al cargar proyectos');
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!res.ok) {
+      // LOG completo de error
+      console.error('[API ERROR]', {
+        path,
+        method: options.method,
+        status: res.status,
+        data: res.data,
+      });
 
-  const cargarCategorias = async () => {
-    try {
-      // Simulación de API call - reemplazar con tu endpoint
-      const categoriasEjemplo = [
-        { id: 1, nombre: "Residencial", descripcion: "Proyectos residenciales" },
-        { id: 2, nombre: "Comercial", descripcion: "Proyectos comerciales" },
-        { id: 3, nombre: "Remodelaciones", descripcion: "Remodelaciones y reformas" }
-      ];
-      setCategorias(categoriasEjemplo);
-    } catch (error) {
-      mostrarError('Error al cargar categorías');
+      const msg =
+        (res.data && (res.data.message || res.data.error || res.data.msg)) ||
+        `HTTP ${res.status}` ||
+        'Error imprevisto.';
+
+      if (String(msg).toUpperCase().includes('TOKEN')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Autenticación requerida',
+          text: 'Tu sesión no es válida o expiró. Vuelve a iniciar sesión.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: typeof msg === 'string' ? msg : 'Error imprevisto.',
+        });
+      }
+      throw new Error(typeof msg === 'string' ? msg : 'Error imprevisto.');
     }
-  };
+
+    return res.data;
+  }
+
+
+  // ===========================
+  // PROYECTOS
+  // ===========================
+const cargarProyectos = async () => {
+  setLoading(true);
+  try {
+    const raw = await api('/proyectos', { method: 'GET' });
+
+    // LOGS CLAVE
+    console.log('[PROY] /proyectos raw =>', raw, 'tipo:', Array.isArray(raw) ? 'array' : typeof raw);
+
+    // ------- PARSER ROBUSTO -------
+    const parse = (data) => {
+      if (!data) return [];
+
+      // Caso 1: array de categorías con Proyectos adentro (tu ejemplo)
+      if (Array.isArray(data) && data.length && (data[0]?.Proyectos || data[0]?.proyectos)) {
+        const out = [];
+        data.forEach((cat, idx) => {
+          const catId = Number(cat?.id ?? cat?.id_categoria ?? cat?.categoria_id ?? 0);
+          const catNombre = cat?.nombre ?? cat?.name ?? 'Sin categoría';
+          const proys = Array.isArray(cat?.Proyectos || cat?.proyectos) ? (cat.Proyectos || cat.proyectos) : [];
+          console.log(`[PROY] cat[${idx}] id=${catId} nombre=${catNombre} proys=${proys.length}`);
+          proys.forEach((p, j) => {
+            out.push({
+              id: p?.id,
+              titulo: p?.titulo ?? '',
+              descripcion: p?.descripcion ?? '',
+              categoria_id: Number(p?.id_categoria ?? catId),
+              es_oculto: Boolean(p?.es_oculto),
+              fotos: Array.isArray(p?.Fotos) ? p.Fotos.map(f => f?.link).filter(Boolean) : (Array.isArray(p?.fotos) ? p.fotos : []),
+              categoria: { id: catId, nombre: catNombre },
+            });
+          });
+        });
+        return out;
+      }
+
+      // Caso 2: array plano de proyectos
+      if (Array.isArray(data)) {
+        return data
+          .filter(Boolean)
+          .map((p, i) => {
+            const catId = Number(p?.id_categoria ?? p?.categoria_id ?? p?.categoria?.id ?? 0);
+            const catNombre = p?.categoria?.nombre ?? 'Sin categoría';
+            return {
+              id: p?.id,
+              titulo: p?.titulo ?? '',
+              descripcion: p?.descripcion ?? '',
+              categoria_id: catId,
+              es_oculto: Boolean(p?.es_oculto),
+              fotos: Array.isArray(p?.Fotos) ? p.Fotos.map(f => f?.link).filter(Boolean) : (Array.isArray(p?.fotos) ? p.fotos : []),
+              categoria: catNombre ? { id: catId, nombre: catNombre } : null,
+            };
+          });
+      }
+
+      // Caso 3: objeto que envuelve { Proyectos: [...] } o similar
+      const arr =
+        data?.Proyectos || data?.proyectos || data?.data || [];
+      if (Array.isArray(arr)) return parse(arr);
+
+      return [];
+    };
+
+    const lista = parse(raw).filter(p => p && p.id != null);
+
+    console.log('[PROY] lista final:', lista);
+    console.table(lista.map(p => ({
+      id: p.id,
+      titulo: p.titulo,
+      cat: p.categoria?.nombre,
+      cat_id: p.categoria_id,
+      fotos: p.fotos?.length || 0,
+      oculto: p.es_oculto
+    })));
+
+    setProyectos(lista);
+  } catch (err) {
+    console.error('[PROY] Error en cargarProyectos:', err);
+    mostrarError('Error al cargar proyectos');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleProyectoSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (editingProyecto) {
-        // Actualizar proyecto existente
         await actualizarProyecto();
         mostrarExito('Proyecto actualizado correctamente');
       } else {
-        // Crear nuevo proyecto
         await crearProyecto();
         mostrarExito('Proyecto creado correctamente');
       }
-      
       resetProyectoForm();
-      cargarProyectos();
-    } catch (error) {
+      await cargarProyectos();
+    } catch (err) {
+      console.error(err);
       mostrarError('Error al guardar el proyecto');
     } finally {
       setLoading(false);
     }
   };
 
-  const crearProyecto = async () => {
-    // Aquí iría tu llamada a la API
-    console.log('Creando proyecto:', proyectoForm);
-    console.log('Fotos:', fotosSeleccionadas);
-    
-    // Simulación de API call
-    return new Promise(resolve => setTimeout(resolve, 1000));
+const crearProyecto = async () => {
+  const base = {
+    titulo: proyectoForm.titulo.trim(),
+    descripcion: proyectoForm.descripcion.trim(),
+    id_categoria: Number(proyectoForm.categoria_id),
+    es_oculto: proyectoForm.es_oculto ? 1 : 0, // el back usa 1/0
   };
 
-  const actualizarProyecto = async () => {
-    // Aquí iría tu llamada a la API
-    console.log('Actualizando proyecto:', proyectoForm);
-    
-    // Simulación de API call
-    return new Promise(resolve => setTimeout(resolve, 1000));
+  console.log('[PROY] creando =>', base);
+
+  const fd = new FormData();
+  fd.append('data', JSON.stringify(base)); // 👈 campo "data" con JSON string
+  fotosSeleccionadas.forEach((f) => fd.append('files', f)); // 👈 campo "files"
+
+  await api('/proyectos', { method: 'POST', body: fd });
+};
+
+const actualizarProyecto = async () => {
+  const id = proyectoForm.id || editingProyecto?.id;
+  if (!id) throw new Error('Proyecto sin id');
+
+  const base = {
+    titulo: proyectoForm.titulo.trim(),
+    descripcion: proyectoForm.descripcion.trim(),
+    id_categoria: Number(proyectoForm.categoria_id),
+    es_oculto: proyectoForm.es_oculto ? 1 : 0,
   };
+
+  console.log('[PROY] actualizando =>', { id, ...base });
+
+  const fd = new FormData();
+  fd.append('data', JSON.stringify(base));
+  fotosSeleccionadas.forEach((f) => fd.append('files', f));
+
+  await api(`/proyectos/${id}`, { method: 'PUT', body: fd });
+};
+
+
+
 
   const eliminarProyecto = async (id) => {
     const result = await Swal.fire({
@@ -139,21 +235,17 @@ function ProyectosAdmin() {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
       try {
         setLoading(true);
-        // Aquí iría tu llamada a la API
-        console.log('Eliminando proyecto:', id);
-        
-        // Simulación
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
+        await api(`/proyectos/${id}`, { method: 'DELETE' });
         mostrarExito('Proyecto eliminado correctamente');
-        cargarProyectos();
-      } catch (error) {
+        await cargarProyectos();
+      } catch (err) {
+        console.error(err);
         mostrarError('Error al eliminar el proyecto');
       } finally {
         setLoading(false);
@@ -161,16 +253,19 @@ function ProyectosAdmin() {
     }
   };
 
-  const editarProyecto = (proyecto) => {
-    setProyectoForm({
-      id: proyecto.id,
-      titulo: proyecto.titulo,
-      descripcion: proyecto.descripcion,
-      categoria_id: proyecto.categoria_id,
-      es_oculto: proyecto.es_oculto
-    });
-    setEditingProyecto(proyecto);
-  };
+const editarProyecto = (proyecto) => {
+  setProyectoForm({
+    id: proyecto.id,
+    titulo: proyecto.titulo ?? '',
+    descripcion: proyecto.descripcion ?? '',
+    categoria_id: Number(proyecto.categoria_id ?? proyecto.categoria?.id ?? ''),
+    es_oculto: Boolean(proyecto.es_oculto),
+  });
+  setEditingProyecto(proyecto);
+  setFotosSeleccionadas([]);
+};
+
+
 
   const resetProyectoForm = () => {
     setProyectoForm({
@@ -178,20 +273,32 @@ function ProyectosAdmin() {
       titulo: '',
       descripcion: '',
       categoria_id: '',
-      es_oculto: false
+      es_oculto: false,
     });
     setEditingProyecto(null);
     setFotosSeleccionadas([]);
   };
 
   // ===========================
-  // FUNCIONES DE CATEGORÍAS
+  // CATEGORÍAS (sin descripción)
   // ===========================
+  const cargarCategorias = async () => {
+    try {
+      const data = await api('/categorias', { method: 'GET' });
+      const normalizadas = (Array.isArray(data) ? data : []).map((c) => ({
+        id: c.id,
+        nombre: c.nombre,
+      }));
+      setCategorias(normalizadas);
+    } catch (err) {
+      console.error(err);
+      mostrarError('Error al cargar categorías');
+    }
+  };
 
   const handleCategoriaSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       if (editingCategoria) {
         await actualizarCategoria();
@@ -200,10 +307,11 @@ function ProyectosAdmin() {
         await crearCategoria();
         mostrarExito('Categoría creada correctamente');
       }
-      
       resetCategoriaForm();
-      cargarCategorias();
-    } catch (error) {
+      await cargarCategorias();
+      await cargarProyectos(); // refrescar etiquetas en proyectos
+    } catch (err) {
+      console.error(err);
       mostrarError('Error al guardar la categoría');
     } finally {
       setLoading(false);
@@ -211,13 +319,23 @@ function ProyectosAdmin() {
   };
 
   const crearCategoria = async () => {
-    console.log('Creando categoría:', categoriaForm);
-    return new Promise(resolve => setTimeout(resolve, 1000));
+    const payload = { nombre: categoriaForm.nombre.trim() };
+    await api('/categorias', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+    });
   };
 
   const actualizarCategoria = async () => {
-    console.log('Actualizando categoría:', categoriaForm);
-    return new Promise(resolve => setTimeout(resolve, 1000));
+    const id = categoriaForm.id || editingCategoria?.id;
+    if (!id) throw new Error('Categoría sin id');
+    const payload = { nombre: categoriaForm.nombre.trim() };
+    await api(`/categorias/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+    });
   };
 
   const eliminarCategoria = async (id) => {
@@ -229,17 +347,18 @@ function ProyectosAdmin() {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     });
 
     if (result.isConfirmed) {
       try {
         setLoading(true);
-        console.log('Eliminando categoría:', id);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await api(`/categorias/${id}`, { method: 'DELETE' });
         mostrarExito('Categoría eliminada correctamente');
-        cargarCategorias();
-      } catch (error) {
+        await cargarCategorias();
+        await cargarProyectos();
+      } catch (err) {
+        console.error(err);
         mostrarError('Error al eliminar la categoría');
       } finally {
         setLoading(false);
@@ -251,7 +370,6 @@ function ProyectosAdmin() {
     setCategoriaForm({
       id: categoria.id,
       nombre: categoria.nombre,
-      descripcion: categoria.descripcion
     });
     setEditingCategoria(categoria);
   };
@@ -260,17 +378,15 @@ function ProyectosAdmin() {
     setCategoriaForm({
       id: '',
       nombre: '',
-      descripcion: ''
     });
     setEditingCategoria(null);
   };
 
   // ===========================
-  // FUNCIONES AUXILIARES
+  // AUXILIARES UI
   // ===========================
-
   const handleFotosChange = (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files || []);
     setFotosSeleccionadas(files);
   };
 
@@ -279,8 +395,8 @@ function ProyectosAdmin() {
       icon: 'success',
       title: 'Éxito',
       text: mensaje,
-      timer: 2000,
-      showConfirmButton: false
+      timer: 1800,
+      showConfirmButton: false,
     });
   };
 
@@ -288,12 +404,14 @@ function ProyectosAdmin() {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: mensaje
+      text: mensaje,
     });
   };
 
+  // ===========================
+  // RENDER
+  // ===========================
   return (
-    
     <div className="admin-container">
       <div className="admin-header">
         <h1>Panel de Administración</h1>
@@ -302,14 +420,14 @@ function ProyectosAdmin() {
 
       {/* Tabs */}
       <div className="admin-tabs">
-        <button 
+        <button
           className={`tab-btn ${activeTab === 'proyectos' ? 'active' : ''}`}
           onClick={() => setActiveTab('proyectos')}
         >
           <i className="fas fa-building"></i>
           Proyectos
         </button>
-        <button 
+        <button
           className={`tab-btn ${activeTab === 'categorias' ? 'active' : ''}`}
           onClick={() => setActiveTab('categorias')}
         >
@@ -318,22 +436,20 @@ function ProyectosAdmin() {
         </button>
       </div>
 
-      {/* Contenido de Proyectos */}
+      {/* Proyectos */}
       {activeTab === 'proyectos' && (
         <div className="admin-content">
           <div className="admin-grid">
-            
-            {/* Formulario de Proyecto */}
             <div className="admin-form-section">
               <h2>{editingProyecto ? 'Editar Proyecto' : 'Crear Proyecto'}</h2>
-              
+
               <form onSubmit={handleProyectoSubmit} className="admin-form">
                 <div className="form-group">
                   <label>Título</label>
                   <input
                     type="text"
                     value={proyectoForm.titulo}
-                    onChange={(e) => setProyectoForm({...proyectoForm, titulo: e.target.value})}
+                    onChange={(e) => setProyectoForm({ ...proyectoForm, titulo: e.target.value })}
                     required
                     placeholder="Nombre del proyecto"
                   />
@@ -343,7 +459,7 @@ function ProyectosAdmin() {
                   <label>Descripción</label>
                   <textarea
                     value={proyectoForm.descripcion}
-                    onChange={(e) => setProyectoForm({...proyectoForm, descripcion: e.target.value})}
+                    onChange={(e) => setProyectoForm({ ...proyectoForm, descripcion: e.target.value })}
                     required
                     placeholder="Descripción detallada"
                     rows="4"
@@ -354,11 +470,11 @@ function ProyectosAdmin() {
                   <label>Categoría</label>
                   <select
                     value={proyectoForm.categoria_id}
-                    onChange={(e) => setProyectoForm({...proyectoForm, categoria_id: e.target.value})}
+                    onChange={(e) => setProyectoForm({ ...proyectoForm, categoria_id: e.target.value })}
                     required
                   >
                     <option value="">Seleccionar categoría</option>
-                    {categorias.map(categoria => (
+                    {categorias.map((categoria) => (
                       <option key={categoria.id} value={categoria.id}>
                         {categoria.nombre}
                       </option>
@@ -385,7 +501,7 @@ function ProyectosAdmin() {
                     <input
                       type="checkbox"
                       checked={proyectoForm.es_oculto}
-                      onChange={(e) => setProyectoForm({...proyectoForm, es_oculto: e.target.checked})}
+                      onChange={(e) => setProyectoForm({ ...proyectoForm, es_oculto: e.target.checked })}
                     />
                     Proyecto oculto
                   </label>
@@ -393,7 +509,7 @@ function ProyectosAdmin() {
 
                 <div className="form-actions">
                   <button type="submit" disabled={loading} className="btn-primary">
-                    {loading ? 'Guardando...' : (editingProyecto ? 'Actualizar' : 'Crear Proyecto')}
+                    {loading ? 'Guardando...' : editingProyecto ? 'Actualizar' : 'Crear Proyecto'}
                   </button>
                   {editingProyecto && (
                     <button type="button" onClick={resetProyectoForm} className="btn-secondary">
@@ -404,20 +520,25 @@ function ProyectosAdmin() {
               </form>
             </div>
 
-            {/* Lista de Proyectos */}
             <div className="admin-list-section">
               <h2>Proyectos Existentes</h2>
-              
+
               <div className="list-container">
-                {proyectos.map(proyecto => (
+                {proyectos.map((proyecto) => (
                   <div key={proyecto.id} className="list-item">
                     <div className="item-info">
                       <h3>{proyecto.titulo}</h3>
                       <p>{proyecto.descripcion}</p>
                       <div className="item-meta">
-                        <span className="categoria-tag">{proyecto.categoria?.nombre}</span>
+                        <span className="categoria-tag">
+                          {proyecto.categoria?.nombre ||
+                            categorias.find((c) => Number(c.id) === Number(proyecto.categoria_id))?.nombre ||
+                            'Sin categoría'}
+                        </span>
                         {proyecto.es_oculto && <span className="oculto-tag">Oculto</span>}
-                        <span className="fotos-count">{proyecto.fotos?.length || 0} fotos</span>
+                        <span className="fotos-count">
+                          {Array.isArray(proyecto.fotos) ? proyecto.fotos.length : 0} fotos
+                        </span>
                       </div>
                     </div>
                     <div className="item-actions">
@@ -430,47 +551,35 @@ function ProyectosAdmin() {
                     </div>
                   </div>
                 ))}
+                {proyectos.length === 0 && <p>No hay proyectos cargados.</p>}
               </div>
             </div>
-
           </div>
         </div>
       )}
 
-      {/* Contenido de Categorías */}
+      {/* Categorías */}
       {activeTab === 'categorias' && (
         <div className="admin-content">
           <div className="admin-grid">
-            
-            {/* Formulario de Categoría */}
             <div className="admin-form-section">
               <h2>{editingCategoria ? 'Editar Categoría' : 'Crear Categoría'}</h2>
-              
+
               <form onSubmit={handleCategoriaSubmit} className="admin-form">
                 <div className="form-group">
                   <label>Nombre</label>
                   <input
                     type="text"
                     value={categoriaForm.nombre}
-                    onChange={(e) => setCategoriaForm({...categoriaForm, nombre: e.target.value})}
+                    onChange={(e) => setCategoriaForm({ ...categoriaForm, nombre: e.target.value })}
                     required
                     placeholder="Nombre de la categoría"
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>Descripción</label>
-                  <textarea
-                    value={categoriaForm.descripcion}
-                    onChange={(e) => setCategoriaForm({...categoriaForm, descripcion: e.target.value})}
-                    placeholder="Descripción de la categoría"
-                    rows="3"
-                  />
-                </div>
-
                 <div className="form-actions">
                   <button type="submit" disabled={loading} className="btn-primary">
-                    {loading ? 'Guardando...' : (editingCategoria ? 'Actualizar' : 'Crear Categoría')}
+                    {loading ? 'Guardando...' : editingCategoria ? 'Actualizar' : 'Crear Categoría'}
                   </button>
                   {editingCategoria && (
                     <button type="button" onClick={resetCategoriaForm} className="btn-secondary">
@@ -481,16 +590,14 @@ function ProyectosAdmin() {
               </form>
             </div>
 
-            {/* Lista de Categorías */}
             <div className="admin-list-section">
               <h2>Categorías Existentes</h2>
-              
+
               <div className="list-container">
-                {categorias.map(categoria => (
+                {categorias.map((categoria) => (
                   <div key={categoria.id} className="list-item">
                     <div className="item-info">
                       <h3>{categoria.nombre}</h3>
-                      <p>{categoria.descripcion || 'Sin descripción'}</p>
                     </div>
                     <div className="item-actions">
                       <button onClick={() => editarCategoria(categoria)} className="btn-edit">
@@ -502,9 +609,9 @@ function ProyectosAdmin() {
                     </div>
                   </div>
                 ))}
+                {categorias.length === 0 && <p>No hay categorías cargadas.</p>}
               </div>
             </div>
-
           </div>
         </div>
       )}
