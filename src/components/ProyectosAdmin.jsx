@@ -3,6 +3,7 @@ import '../styles/proyectosAdmin.css';
 import Swal from 'sweetalert2';
 import { useAdminGuard } from './Login';
 import fetchWithAuth from '../lib/fetchWithAuth';
+import { compressImage } from '../utils/compressImage';
 
 const API = 'https://alvarez-back.vercel.app';
 const USE_MULTIPART = true; // ponelo en false si tu backend aún no acepta archivos
@@ -195,12 +196,28 @@ const crearProyecto = async () => {
   };
 
   console.log('[PROY] creando =>', base);
+  console.time('[PROY] compresión total');
 
+  // 1) Comprimir TODAS las imágenes (tal como en MCL)
+  const comprimidas = await Promise.all(
+    fotosSeleccionadas.map(async (f, i) => {
+      console.log(`[PROY] original #${i+1}: ${f.name} - ${(f.size/1024).toFixed(1)} KB`);
+      const out = await compressImage(f);
+      console.log(`[PROY] comprimida #${i+1}: ${out.name} - ${(out.size/1024).toFixed(1)} KB`);
+      return out;
+    })
+  );
+
+  console.timeEnd('[PROY] compresión total');
+
+  // 2) Enviar al backend
   const fd = new FormData();
-  fd.append('data', JSON.stringify(base)); // 👈 campo "data" con JSON string
-  fotosSeleccionadas.forEach((f) => fd.append('files', f)); // 👈 campo "files"
+  fd.append('data', JSON.stringify(base)); // campo "data" con JSON string
+  comprimidas.forEach((f) => fd.append('files', f)); // campo "files" (comprimidas)
 
+  console.log('[PROY] subiendo', { cant: comprimidas.length });
   await api('/proyectos', { method: 'POST', body: fd });
+  console.log('[PROY] listo ✔️');
 };
 
 const actualizarProyecto = async () => {
