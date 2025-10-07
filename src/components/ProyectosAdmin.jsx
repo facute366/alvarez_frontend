@@ -220,6 +220,7 @@ const crearProyecto = async () => {
   console.log('[PROY] listo ✔️');
 };
 
+// Reemplazá tu actualizarProyecto por este (editar = actualizar con compresión)
 const actualizarProyecto = async () => {
   const id = proyectoForm.id || editingProyecto?.id;
   if (!id) throw new Error('Proyecto sin id');
@@ -228,16 +229,31 @@ const actualizarProyecto = async () => {
     titulo: proyectoForm.titulo.trim(),
     descripcion: proyectoForm.descripcion.trim(),
     id_categoria: Number(proyectoForm.categoria_id),
-    es_oculto: proyectoForm.es_oculto ? 1 : 0,
+    es_oculto: proyectoForm.es_oculto ? 1 : 0, // back usa 1/0
   };
 
   console.log('[PROY] actualizando =>', { id, ...base });
 
+  // Comprimir imágenes nuevas igual que en crearProyecto
+  console.time('[PROY] compresión total (edit)');
+  const comprimidas = await Promise.all(
+    fotosSeleccionadas.map(async (f, i) => {
+      console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
+      const out = await compressImage(f);
+      console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
+      return out;
+    })
+  );
+  console.timeEnd('[PROY] compresión total (edit)');
+
   const fd = new FormData();
   fd.append('data', JSON.stringify(base));
-  fotosSeleccionadas.forEach((f) => fd.append('files', f));
+  // si hay nuevas fotos seleccionadas, adjuntar comprimidas
+  comprimidas.forEach((f) => fd.append('files', f));
 
+  console.log('[PROY] subiendo (edit)', { id, cant: comprimidas.length });
   await api(`/proyectos/${id}`, { method: 'PUT', body: fd });
+  console.log('[PROY] edit listo ✔️');
 };
 
 

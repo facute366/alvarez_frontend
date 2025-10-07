@@ -56,7 +56,7 @@ export default function CarruselPublic() {
                 background: '#f5f5f5'
               }}
             >
-              Sin imágenes de carrusel
+              Cargando...
             </div>
           </div>
         ) : (
