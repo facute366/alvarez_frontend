@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { useAdminGuard } from './Login';
 import fetchWithAuth from '../lib/fetchWithAuth';
 import { compressImage } from '../utils/compressImage';
+import Sortable from 'sortablejs'; // <- igual que en MCL
 
 const API = 'https://alvarez-back.vercel.app';
 
@@ -26,10 +27,11 @@ function ProyectosAdmin() {
   });
   const [editingProyecto, setEditingProyecto] = useState(null);
 
-  // --- Selección de fotos (estilo MCL) ---
-  // items: [{ key, file, url }]
+  // --- Selección de fotos (estilo MCL): [{ key, file, url }]
   const [fotoItems, setFotoItems] = useState([]);
   const fileInputRef = useRef(null);
+  const previewRef = useRef(null);     // contenedor de la grilla
+  const sortableRef = useRef(null);    // instancia Sortable
 
   // Categorías
   const [categoriaForm, setCategoriaForm] = useState({ id: '', nombre: '' });
@@ -40,13 +42,10 @@ function ProyectosAdmin() {
     cargarProyectos();
   }, []);
 
-  // ===========================
-  // Helper API
-  // ===========================
+  // ====== API helper ======
   async function api(path, options = {}) {
     const url = `${API}${path}`;
     const res = await fetchWithAuth(url, options);
-
     if (!res.ok) {
       console.error('[API ERROR]', { path, method: options.method, status: res.status, data: res.data });
       const msg =
@@ -59,9 +58,7 @@ function ProyectosAdmin() {
     return res.data;
   }
 
-  // ===========================
-  // PROYECTOS
-  // ===========================
+  // ====== PROYECTOS ======
   const cargarProyectos = async () => {
     setLoading(true);
     try {
@@ -145,8 +142,7 @@ function ProyectosAdmin() {
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
     };
 
-    // comprimir en el orden establecido por el usuario
-    const files = fotoItems.map(it => it.file);
+    const files = fotoItems.map(it => it.file); // respeta el orden del usuario
     console.time('[PROY] compresión total');
     const comprimidas = await Promise.all(
       files.map(async (f, i) => {
@@ -175,7 +171,7 @@ function ProyectosAdmin() {
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
     };
 
-    const files = fotoItems.map(it => it.file); // solo nuevas seleccionadas
+    const files = fotoItems.map(it => it.file);
     console.time('[PROY] compresión total (edit)');
     const comprimidas = await Promise.all(
       files.map(async (f, i) => {
@@ -227,9 +223,7 @@ function ProyectosAdmin() {
       es_oculto: Boolean(proyecto.es_oculto),
     });
     setEditingProyecto(proyecto);
-    // al entrar a editar: no mostramos fotos existentes aquí (solo NUEVAS seleccionadas)
-    // y limpiamos cualquier selección previa
-    revokeAllAndClear();
+    revokeAllAndClear(); // al entrar a editar, limpiamos selección previa
   };
 
   const resetProyectoForm = () => {
@@ -238,9 +232,7 @@ function ProyectosAdmin() {
     revokeAllAndClear();
   };
 
-  // ===========================
-  // CATEGORÍAS
-  // ===========================
+  // ====== CATEGORÍAS ======
   const cargarCategorias = async () => {
     try {
       const data = await api('/categorias', { method: 'GET' });
@@ -330,9 +322,7 @@ function ProyectosAdmin() {
     setEditingCategoria(null);
   };
 
-  // ===========================
-  // FOTOS (como MCL)
-  // ===========================
+  // ====== FOTOS (como MCL, con SortableJS) ======
   const makeKey = (f, idx) => `${f.name}__${f.size}__${f.lastModified}__${idx}`;
 
   // reemplaza la selección completa (revoca las urls anteriores)
@@ -355,38 +345,9 @@ function ProyectosAdmin() {
       const next = [...prev];
       const [removed] = next.splice(idx, 1);
       if (removed) URL.revokeObjectURL(removed.url);
-      // si nos quedamos sin nada, limpio el input file
       if (next.length === 0 && fileInputRef.current) fileInputRef.current.value = '';
       return next;
     });
-  };
-
-  // reordenar (NO revocar)
-  const moveItem = (from, to) => {
-    if (from === to || from == null || to == null) return;
-    setFotoItems((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(to, 0, moved);
-      return next;
-    });
-  };
-
-  // drag & drop handlers
-  const dragFromRef = useRef(null);
-  const onDragStart = (i) => (e) => {
-    dragFromRef.current = i;
-    e.dataTransfer.effectAllowed = 'move';
-  };
-  const onDragOver = (i) => (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-  const onDrop = (i) => (e) => {
-    e.preventDefault();
-    const from = dragFromRef.current;
-    moveItem(from, i);
-    dragFromRef.current = null;
   };
 
   const revokeAllAndClear = () => {
@@ -395,15 +356,49 @@ function ProyectosAdmin() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // ===========================
-  // UI helpers
-  // ===========================
+  // Inicializar / actualizar SortableJS cuando cambia la grilla
+  useEffect(() => {
+    const el = previewRef.current;
+    if (!el) return;
+
+    // destruir previa
+    if (sortableRef.current) {
+      sortableRef.current.destroy();
+      sortableRef.current = null;
+    }
+
+    if (!fotoItems.length) return;
+
+    sortableRef.current = Sortable.create(el, {
+      animation: 150,
+      ghostClass: 'drag-ghost',     // clases para estilos
+      chosenClass: 'drag-chosen',
+      dragClass: 'dragging',
+      // importante para mobile:
+      // (Sortable ya maneja touch, no uses HTML5 drag)
+      onEnd: () => {
+        // leer nuevo orden desde el DOM (data-key en cada hijo)
+        const orderKeys = Array.from(el.children).map((n) => n.getAttribute('data-key'));
+        setFotoItems((prev) => {
+          const map = new Map(prev.map((it) => [it.key, it]));
+          return orderKeys.map((k) => map.get(k)).filter(Boolean);
+        });
+      },
+    });
+
+    return () => {
+      if (sortableRef.current) {
+        sortableRef.current.destroy();
+        sortableRef.current = null;
+      }
+    };
+  }, [fotoItems]);
+
+  // ====== UI helpers ======
   const mostrarExito = (mensaje) => Swal.fire({ icon: 'success', title: 'Éxito', text: mensaje, timer: 1800, showConfirmButton: false });
   const mostrarError = (mensaje) => Swal.fire({ icon: 'error', title: 'Error', text: mensaje });
 
-  // ===========================
-  // RENDER
-  // ===========================
+  // ====== RENDER ======
   return (
     <div className="admin-container">
       <div className="admin-header">
@@ -474,24 +469,15 @@ function ProyectosAdmin() {
                     className="file-input"
                   />
 
-                  {/* Grilla con sortable + eliminar (crear y editar) */}
+                  {/* Grilla con SortableJS + botón X (crear y editar) */}
                   {fotoItems.length > 0 && (
-                    <div className="preview-grid">
+                    <div className="preview-grid" ref={previewRef}>
                       {fotoItems.map((it, i) => (
-                        <div
-                          key={it.key}
-                          className="preview-item"
-                          draggable
-                          onDragStart={onDragStart(i)}
-                          onDragOver={onDragOver(i)}
-                          onDrop={onDrop(i)}
-                          title="Arrastrá para reordenar"
-                        >
+                        <div key={it.key} data-key={it.key} className="preview-item">
                           <button type="button" className="remove-btn" onClick={() => removeAt(i)} aria-label="Quitar imagen">
                             ×
                           </button>
                           <img src={it.url} alt={`preview-${i}`} />
-                          <div className="drag-hint">↕</div>
                         </div>
                       ))}
                     </div>

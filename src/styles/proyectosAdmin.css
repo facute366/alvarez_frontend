@@ -437,17 +437,7 @@
   border-radius: 8px;
   overflow: hidden;
   aspect-ratio: 1 / 1;
-  cursor: grab;              /* hint visual para drag */
   user-select: none;
-}
-
-.preview-item:active {
-  cursor: grabbing;
-}
-
-.preview-item.drag-over {
-  outline: 2px dashed #3b82f6; /* azul */
-  outline-offset: 2px;
 }
 
 .preview-item img {
@@ -459,31 +449,31 @@
 
 .remove-btn {
   position: absolute;
-  right: 0;
-  width: 4px;
-  height: 35px;
-  line-height: 20px;
-  border-radius: 50%;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
   border: none;
-  background: #ef4444;   /* rojo tailwind-ish */
+  border-radius: 50%;
+  background: #ef4444;
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,.2);
   display: flex;
+  align-items: center;
   justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .remove-btn:hover {
   background: #dc2626;
+  transform: scale(1.08);
 }
 
-.drag-hint {
-  position: absolute;
-  bottom: 4px;
-  right: 6px;
-  font-size: 16px;
-  opacity: 0.8;
-  pointer-events: none;
-}
+
+/* clases de SortableJS (opcional para feedback visual) */
+.drag-ghost   { opacity: 0.6; }
+.drag-chosen  { box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+.dragging     { opacity: 0.9; }
