@@ -31,8 +31,9 @@ export default function Header() {
           ) : (
             <>
               <Link to="/" className="nav-link">Inicio</Link>
-              <Link to="/proyectos" className="nav-link">Proyectos</Link>
               <a href="#sobre-nosotros" className="nav-link">Nosotros</a>
+              <Link to="/proyectos" className="nav-link">Proyectos</Link>
+              <a href="#sobre-nosotros" className="nav-link">Beneficios</a>
               <a href="#contacto" className="nav-link">Contacto</a>
             </>
           )}
