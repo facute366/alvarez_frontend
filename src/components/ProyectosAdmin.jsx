@@ -534,6 +534,36 @@ const actualizarProyecto = async () => {
               <div className="list-container">
                 {proyectos.map((proyecto) => (
                   <div key={proyecto.id} className="list-item">
+                    {/* Preview de imágenes */}
+                    <div className="item-images">
+                      {proyecto.fotos && Array.isArray(proyecto.fotos) && proyecto.fotos.length > 0 ? (
+                        <>
+                          <div className="main-image">
+                            <img src={proyecto.fotos[0]} alt={proyecto.titulo} />
+                          </div>
+                          {proyecto.fotos.length > 1 && (
+                            <div className="thumbnail-images">
+                              {proyecto.fotos.slice(1, 4).map((foto, index) => (
+                                <div key={index} className="thumbnail-item">
+                                  <img src={foto} alt={`${proyecto.titulo} ${index + 2}`} />
+                                </div>
+                              ))}
+                              {proyecto.fotos.length > 4 && (
+                                <div className="thumbnail-more">
+                                  +{proyecto.fotos.length - 4}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="no-image">
+                          <i className="fas fa-image"></i>
+                          <span>Sin imágenes</span>
+                        </div>
+                      )}
+                    </div>
+                    
                     <div className="item-info">
                       <h3>{proyecto.titulo}</h3>
                       <p>{proyecto.descripcion}</p>

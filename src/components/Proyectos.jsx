@@ -176,7 +176,7 @@ function Proyectos() {
           </div>
           
           <h1>Nuestros Proyectos</h1>
-          <p>Explora nuestra galería completa con más de 500 obras realizadas a lo largo de 5 años de experiencia</p>
+          <p>Explora nuestra galería completa con más de 100 obras realizadas a lo largo de 5 años de experiencia</p>
         </div>
 
         {/* Filtros */}
