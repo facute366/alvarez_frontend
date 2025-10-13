@@ -171,21 +171,42 @@ function ProyectosAdmin() {
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
     };
 
-    const files = fotoItems.map(it => it.file);
-    console.time('[PROY] compresión total (edit)');
-    const comprimidas = await Promise.all(
-      files.map(async (f, i) => {
-        console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
-        const out = await compressImage(f);
-        console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
-        return out;
-      })
-    );
-    console.timeEnd('[PROY] compresión total (edit)');
+    // Separar fotos nuevas de las existentes y crear orden completo
+    const newFiles = fotoItems.filter(item => !item.isExisting).map(it => it.file);
+    const existingPhotos = fotoItems.filter(item => item.isExisting);
+    
+    // Crear arrays para el backend
+    const keepPhotos = existingPhotos.map(item => item.fotoId).filter(Boolean);
+    const photoOrder = fotoItems.map((item, index) => ({
+      id: item.isExisting ? item.fotoId : `new_${index}`,
+      order: index,
+      isExisting: item.isExisting
+    }));
 
     const fd = new FormData();
-    fd.append('data', JSON.stringify(base));
-    comprimidas.forEach((f) => fd.append('files', f));
+    fd.append('data', JSON.stringify({
+      ...base,
+      keepPhotos: keepPhotos, // IDs de fotos a mantener
+      photoOrder: photoOrder, // Orden completo de las fotos
+      totalPhotos: fotoItems.length // Total de fotos después de la edición
+    }));
+
+    // Solo comprimir y enviar fotos nuevas
+    if (newFiles.length > 0) {
+      console.time('[PROY] compresión total (edit)');
+      const comprimidas = await Promise.all(
+        newFiles.map(async (f, i) => {
+          console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
+          const out = await compressImage(f);
+          console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
+          return out;
+        })
+      );
+      console.timeEnd('[PROY] compresión total (edit)');
+      
+      comprimidas.forEach((f) => fd.append('files', f));
+    }
+
     await api(`/proyectos/${id}`, { method: 'PUT', body: fd });
   };
 
@@ -223,7 +244,48 @@ function ProyectosAdmin() {
       es_oculto: Boolean(proyecto.es_oculto),
     });
     setEditingProyecto(proyecto);
-    revokeAllAndClear(); // al entrar a editar, limpiamos selección previa
+    
+    // Cargar las fotos existentes del proyecto
+    revokeAllAndClear(); // limpiar fotos anteriores
+    
+    if (proyecto.fotos && Array.isArray(proyecto.fotos) && proyecto.fotos.length > 0) {
+      console.log('[EDIT] Fotos del proyecto:', proyecto.fotos); // Debug
+      
+      const existingFotoItems = proyecto.fotos.map((foto, index) => {
+        // Manejar diferentes estructuras de datos de fotos
+        let fotoUrl, fotoId;
+        
+        if (typeof foto === 'string') {
+          // Si es solo una URL string
+          fotoUrl = foto;
+          fotoId = `url_${index}`; // ID temporal para fotos que solo tienen URL
+        } else if (typeof foto === 'object') {
+          // Si es un objeto con propiedades
+          fotoUrl = foto.url || foto.imagen_url || foto.link || foto.src;
+          fotoId = foto.id || foto.foto_id || `obj_${index}`;
+        } else {
+          console.warn('[EDIT] Formato de foto no reconocido:', foto);
+          return null;
+        }
+        
+        if (!fotoUrl) {
+          console.warn('[EDIT] No se pudo obtener URL de la foto:', foto);
+          return null;
+        }
+        
+        return {
+          key: `existing_${fotoId}_${Date.now()}_${index}`,
+          file: null,
+          url: fotoUrl,
+          isExisting: true,
+          fotoId: fotoId,
+          originalIndex: index // Guardar el índice original
+        };
+      }).filter(Boolean); // Filtrar elementos null
+      
+      console.log('[EDIT] FotoItems creados:', existingFotoItems); // Debug
+      setFotoItems(existingFotoItems);
+    }
   };
 
   const resetProyectoForm = () => {
@@ -326,32 +388,49 @@ function ProyectosAdmin() {
   const makeKey = (f, idx) => `${f.name}__${f.size}__${f.lastModified}__${idx}`;
 
   // reemplaza la selección completa (revoca las urls anteriores)
-  const handleFotosChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    // revocar anteriores
-    fotoItems.forEach(it => URL.revokeObjectURL(it.url));
-    // crear nuevos
-    const items = files.map((f, i) => ({
-      key: makeKey(f, i),
-      file: f,
-      url: URL.createObjectURL(f),
-    }));
-    setFotoItems(items);
-  };
+ const handleFotosChange = (e) => {
+  const files = Array.from(e.target.files || []);
+  
+  // Mantener las fotos existentes
+  const existingPhotos = fotoItems.filter(item => item.isExisting);
+  
+  // Crear nuevos items solo para las fotos nuevas
+  const newItems = files.map((f, i) => ({
+    key: makeKey(f, i + existingPhotos.length),
+    file: f,
+    url: URL.createObjectURL(f),
+    isExisting: false
+  }));
+  
+  // Combinar fotos existentes con las nuevas
+  setFotoItems([...existingPhotos, ...newItems]);
+};
 
   // quitar una imagen (revoca solo esa)
   const removeAt = (idx) => {
     setFotoItems((prev) => {
       const next = [...prev];
       const [removed] = next.splice(idx, 1);
-      if (removed) URL.revokeObjectURL(removed.url);
-      if (next.length === 0 && fileInputRef.current) fileInputRef.current.value = '';
+      
+      // Solo revocar URL si no es una foto existente
+      if (removed && !removed.isExisting) {
+        URL.revokeObjectURL(removed.url);
+      }
+      
+      if (next.length === 0 && fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       return next;
     });
   };
 
   const revokeAllAndClear = () => {
-    fotoItems.forEach(it => URL.revokeObjectURL(it.url));
+    // Solo revocar URLs de fotos nuevas (no existentes)
+    fotoItems.forEach(it => {
+      if (!it.isExisting && it.url) {
+        URL.revokeObjectURL(it.url);
+      }
+    });
     setFotoItems([]);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -473,7 +552,11 @@ function ProyectosAdmin() {
                   {fotoItems.length > 0 && (
                     <div className="preview-grid" ref={previewRef}>
                       {fotoItems.map((it, i) => (
-                        <div key={it.key} data-key={it.key} className="preview-item">
+                        <div 
+                          key={it.key} 
+                          data-key={it.key} 
+                          className={`preview-item ${it.isExisting ? 'existing' : ''}`}
+                        >
                           <button type="button" className="remove-btn" onClick={() => removeAt(i)} aria-label="Quitar imagen">
                             ×
                           </button>

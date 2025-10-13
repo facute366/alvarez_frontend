@@ -447,6 +447,28 @@
   display:block;
 }
 
+/* Estilos para fotos existentes vs nuevas */
+.preview-item.existing {
+  border: 2px solid var(--primario);
+  position: relative;
+}
+
+.preview-item.existing::after {
+  content: '📷';
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: var(--primario);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
 .remove-btn {
   position: absolute;
   top: 6px;
@@ -477,3 +499,27 @@
 .drag-ghost   { opacity: 0.6; }
 .drag-chosen  { box-shadow: 0 6px 16px rgba(0,0,0,.25); }
 .dragging     { opacity: 0.9; }
+
+/* ===========================
+   Estilos para fotos existentes vs nuevas
+   =========================== */
+.preview-item.existing {
+  border: 2px solid var(--primario);
+  position: relative;
+}
+
+.preview-item.existing::after {
+  content: '📷';
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: var(--primario);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
