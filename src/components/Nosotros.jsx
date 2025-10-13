@@ -124,7 +124,7 @@ function SobreNosotros() {
 
             <div className="equipo-visual">
               <div className="imagen-principal">
-                <img src="/path/to/equipo.jpg" alt="Equipo Alvarez" />
+                <img src="/assets/img/equipo.jpeg" alt="Equipo Alvarez" />
                 <div className="imagen-badge">
                   <span>+5 años</span>
                   <small>construyendo juntos</small>
