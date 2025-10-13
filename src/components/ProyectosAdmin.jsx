@@ -477,6 +477,27 @@ const actualizarProyecto = async () => {
 
                 <div className="form-group">
                   <label>Fotos</label>
+                  
+                  {/* Visualización de fotos actuales (solo cuando se edita) */}
+                  {editingProyecto && editingProyecto.fotos && editingProyecto.fotos.length > 0 && (
+                    <div className="current-photos-preview">
+                      <p className="current-photos-label">
+                        <i className="fas fa-images"></i>
+                        Fotos actuales del proyecto ({editingProyecto.fotos.length})
+                      </p>
+                      <div className="current-photos-grid">
+                        {editingProyecto.fotos.map((foto, index) => (
+                          <div key={index} className="current-photo-item">
+                            <img 
+                              src={typeof foto === 'string' ? foto : foto.url || foto.imagen_url || foto.link} 
+                              alt={`${editingProyecto.titulo} - Foto ${index + 1}`} 
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
                   <input
                     ref={fileInputRef}
                     type="file"
