@@ -1,16 +1,33 @@
 import { useState } from "react";
 import "../styles/header.css";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link as ScrollLink, scroller } from 'react-scroll';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setOpen(!open);
   const closeMenu = () => setOpen(false);
 
-  // Si la ruta empieza con /admin o /carrusel-admin => mostrar menú admin
-  const isAdmin = location.pathname.startsWith("/admin") || location.pathname.startsWith("/carrusel-admin");
+  const isAdmin =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/carrusel-admin");
+
+  // 👉 función para hacer scroll suave incluso si estás en otra ruta
+  const goTo = (id) => {
+    const opts = { smooth: true, duration: 600, offset: -80 };
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => scroller.scrollTo(id, opts), 100);
+    } else {
+      scroller.scrollTo(id, opts);
+    }
+
+    closeMenu();
+  };
 
   return (
     <header className="header">
@@ -31,10 +48,16 @@ export default function Header() {
           ) : (
             <>
               <Link to="/" className="nav-link">Inicio</Link>
-              <a href="#sobre-nosotros" className="nav-link">Nosotros</a>
+              <ScrollLink to="sobre-nosotros" smooth duration={600} offset={-80} className="nav-link">
+                Nosotros
+              </ScrollLink>
               <Link to="/proyectos" className="nav-link">Proyectos</Link>
-              <a href="#sobre-nosotros" className="nav-link">Beneficios</a>
-              <a href="#contacto" className="nav-link">Contacto</a>
+              <ScrollLink to="beneficios" smooth duration={600} offset={-80} className="nav-link">
+                Beneficios
+              </ScrollLink>
+              <ScrollLink to="contacto" smooth duration={600} offset={-80} className="nav-link">
+                Contacto
+              </ScrollLink>
             </>
           )}
         </nav>
@@ -43,9 +66,9 @@ export default function Header() {
         {!isAdmin && (
           <Link to="/login" className="user-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M4 21v-2a4 4 0 0 1 3-3.87"/>
-              <circle cx="12" cy="7" r="4"/>
+              <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+              <circle cx="12" cy="7" r="4" />
             </svg>
           </Link>
         )}
@@ -57,7 +80,7 @@ export default function Header() {
           <span></span>
         </button>
 
-        {/* Mobile Menu */}
+        {/* ✅ Mobile Menu con scroll suave */}
         <nav className={`nav-mobile ${open ? 'open' : ''}`}>
           {isAdmin ? (
             <>
@@ -68,9 +91,16 @@ export default function Header() {
           ) : (
             <>
               <Link to="/" className="nav-link" onClick={closeMenu}>Inicio</Link>
+              <button type="button" className="nav-link" onClick={() => goTo('sobre-nosotros')}>
+                Nosotros
+              </button>
               <Link to="/proyectos" className="nav-link" onClick={closeMenu}>Proyectos</Link>
-              <a href="#sobre-nosotros" className="nav-link" onClick={closeMenu}>Nosotros</a>
-              <a href="#contacto" className="nav-link" onClick={closeMenu}>Contacto</a>
+              <button type="button" className="nav-link" onClick={() => goTo('beneficios')}>
+                Beneficios
+              </button>
+              <button type="button" className="nav-link" onClick={() => goTo('contacto')}>
+                Contacto
+              </button>
               <Link to="/login" className="nav-link" onClick={closeMenu}>Iniciar Sesión</Link>
             </>
           )}

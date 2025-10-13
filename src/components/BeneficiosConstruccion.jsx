@@ -6,7 +6,7 @@ function BeneficiosConstruccion() {
       <div className="contenedor">
         
         {/* Header */}
-        <div className="beneficios-header">
+        <div className="beneficios-header" id="beneficios">
           <span className="beneficios-badge">Ventajas Exclusivas</span>
           <h2>Beneficios de la Construcción en Seco</h2>
           <p>
