@@ -19,97 +19,120 @@ function Servicios() {
       <div className="servicios-lista-section">
         <div className="contenedor">
           
-          {/* Servicio 1 */}
-          <div className="servicio-item">
-            <div className="servicio-numero">01</div>
-            <div className="servicio-contenido">
-              <div className="servicio-texto">
-                <h3>Construcción de Casas en Seco</h3>
-                <p>Sistema constructivo innovador que permite construcciones más rápidas, eficientes y sustentables. Utilizamos materiales de primera calidad para garantizar durabilidad y confort.</p>
-                <div className="servicio-features">
-                  <span className="feature">• Construcción rápida</span>
-                  <span className="feature">• Eco-friendly</span>
-                  <span className="feature">• Térmica eficiente</span>
-                </div>
-              </div>
-              <div className="servicio-imagen">
-                <img src="/path/to/casas-seco.jpg" alt="Construcción de casas en seco" />
-                <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Construcción de Casas en Seco', '_blank')}>
-                  Consultar
-                  <i className="fas fa-arrow-right"></i>
-                </button>
-              </div>
+      {/* Categoría 1 */}
+      <div className="servicio-item">
+        <div className="servicio-numero">01</div>
+        <div className="servicio-contenido">
+          <div className="servicio-texto">
+            <h3>Cielorrasos</h3>
+            <p>Instalamos cielorrasos de alta calidad en distintos materiales, logrando ambientes modernos, prolijos y con excelente aislamiento acústico y térmico.</p>
+            <div className="servicio-features">
+              <span className="feature">• Terminaciones prolijas</span>
+              <span className="feature">• Aislamiento térmico/acústico</span>
+              <span className="feature">• Múltiples materiales y estilos</span>
             </div>
           </div>
+          <div className="servicio-imagen">
+            <img src="/path/to/cielorrasos.jpg" alt="Cielorrasos" />
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Cielorrasos', '_blank')}>
+              Consultar
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
 
-          {/* Servicio 2 */}
-          <div className="servicio-item reverse">
-            <div className="servicio-numero">02</div>
-            <div className="servicio-contenido">
-              <div className="servicio-imagen">
-                <img src="/path/to/ampliaciones.jpg" alt="Ampliaciones y remodelaciones" />
-                <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Ampliaciones y Remodelaciones', '_blank')}>
-                  Consultar
-                  <i className="fas fa-arrow-right"></i>
-                </button>
-              </div>
-              <div className="servicio-texto">
-                <h3>Ampliaciones y Remodelaciones</h3>
-                <p>Transformamos y expandimos espacios existentes adaptándolos a tus nuevas necesidades. Renovamos tu hogar o negocio con diseños modernos y funcionales.</p>
-                <div className="servicio-features">
-                  <span className="feature">• Diseño personalizado</span>
-                  <span className="feature">• Optimización de espacios</span>
-                  <span className="feature">• Modernización integral</span>
-                </div>
-              </div>
+      {/* Categoría 2 */}
+      <div className="servicio-item reverse">
+        <div className="servicio-numero">02</div>
+        <div className="servicio-contenido">
+          <div className="servicio-imagen">
+            <img src="/path/to/placares-muebles.jpg" alt="Placares y muebles a medida" />
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Placares y Muebles', '_blank')}>
+              Consultar
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <div className="servicio-texto">
+            <h3>Placares y Muebles</h3>
+            <p>Diseñamos y fabricamos placares y muebles a medida, optimizando tus espacios con soluciones funcionales, estéticas y duraderas.</p>
+            <div className="servicio-features">
+              <span className="feature">• Diseño a medida</span>
+              <span className="feature">• Materiales resistentes</span>
+              <span className="feature">• Instalación profesional</span>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Servicio 3 */}
-          <div className="servicio-item">
-            <div className="servicio-numero">03</div>
-            <div className="servicio-contenido">
-              <div className="servicio-texto">
-                <h3>Locales Comerciales y Oficinas</h3>
-                <p>Creamos espacios comerciales que maximizan la productividad y atraen clientes. Diseños que reflejan la identidad de tu marca y optimizan la experiencia del usuario.</p>
-                <div className="servicio-features">
-                  <span className="feature">• Diseño comercial</span>
-                  <span className="feature">• Funcionalidad optimizada</span>
-                  <span className="feature">• Imagen corporativa</span>
-                </div>
-              </div>
-              <div className="servicio-imagen">
-                <img src="/path/to/locales.jpg" alt="Locales comerciales" />
-                <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Locales Comerciales', '_blank')}>
-                  Consultar
-                  <i className="fas fa-arrow-right"></i>
-                </button>
-              </div>
+      {/* Categoría 3 */}
+      <div className="servicio-item">
+        <div className="servicio-numero">03</div>
+        <div className="servicio-contenido">
+          <div className="servicio-texto">
+            <h3>Revestimientos</h3>
+            <p>Aplicamos revestimientos interiores y exteriores que transforman los espacios, brindando durabilidad, estética y protección frente al desgaste.</p>
+            <div className="servicio-features">
+              <span className="feature">• Amplia variedad de estilos</span>
+              <span className="feature">• Materiales resistentes</span>
+              <span className="feature">• Acabados modernos</span>
             </div>
           </div>
+          <div className="servicio-imagen">
+            <img src="/path/to/revestimientos.jpg" alt="Revestimientos" />
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Revestimientos', '_blank')}>
+              Consultar
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
 
-          {/* Servicio 4 */}
-          <div className="servicio-item reverse">
-            <div className="servicio-numero">04</div>
-            <div className="servicio-contenido">
-              <div className="servicio-imagen">
-                <img src="/path/to/revestimientos.jpg" alt="Revestimientos y cielorrasos" />
-                <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Revestimientos', '_blank')}>
-                  Consultar
-                  <i className="fas fa-arrow-right"></i>
-                </button>
-              </div>
-              <div className="servicio-texto">
-                <h3>Revestimientos, Cielorrasos y Tabiques</h3>
-                <p>Terminaciones de alta calidad que dan el toque final perfecto a cualquier ambiente. Trabajamos con materiales premium para resultados excepcionales.</p>
-                <div className="servicio-features">
-                  <span className="feature">• Materiales premium</span>
-                  <span className="feature">• Acabados perfectos</span>
-                  <span className="feature">• Técnicas avanzadas</span>
-                </div>
-              </div>
+      {/* Categoría 4 */}
+      <div className="servicio-item reverse">
+        <div className="servicio-numero">04</div>
+        <div className="servicio-contenido">
+          <div className="servicio-imagen">
+            <img src="/path/to/oficinas-locales.jpg" alt="Oficinas y locales comerciales" />
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Oficinas y Locales Comerciales', '_blank')}>
+              Consultar
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <div className="servicio-texto">
+            <h3>Oficinas y Locales Comerciales</h3>
+            <p>Diseñamos y construimos espacios de trabajo y locales comerciales modernos, funcionales y adaptados a la identidad de cada marca.</p>
+            <div className="servicio-features">
+              <span className="feature">• Diseño funcional</span>
+              <span className="feature">• Imagen corporativa</span>
+              <span className="feature">• Entrega llave en mano</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Categoría 5 */}
+      <div className="servicio-item">
+        <div className="servicio-numero">05</div>
+        <div className="servicio-contenido">
+          <div className="servicio-texto">
+            <h3>Steel Framing</h3>
+            <p>Construimos con sistema Steel Framing, una tecnología de perfilería galvanizada que garantiza estructuras sólidas, livianas y de rápida ejecución.</p>
+            <div className="servicio-features">
+              <span className="feature">• Alta resistencia estructural</span>
+              <span className="feature">• Eficiencia energética</span>
+              <span className="feature">• Construcción rápida y limpia</span>
+            </div>
+          </div>
+          <div className="servicio-imagen">
+            <img src="/path/to/steel-framing.jpg" alt="Steel Framing" />
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Steel Framing', '_blank')}>
+              Consultar
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
 
         </div>
       </div>
