@@ -702,7 +702,6 @@
   .stat-item {
     margin: 0;
     padding: 1rem;
-    max-width: 250px;
     width: 100%;
   }
   
@@ -883,6 +882,7 @@
   
   .stat-item {
     padding: 0.8rem;
+    width: 100%;
   }
   
   .timeline::before {

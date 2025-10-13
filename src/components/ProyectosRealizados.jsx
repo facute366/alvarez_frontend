@@ -200,7 +200,7 @@ function ProyectosRealizados() {
             </Link>
           </div>
           
-          <div className="cta-stats">
+          <div className="cta-stats cta-stats-desktop">
             <div className="stat">
               <div className="stat-number">100+</div>
               <div className="stat-label">Proyectos</div>

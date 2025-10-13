@@ -163,7 +163,7 @@ function BeneficiosConstruccion() {
             <h3>¿Listo para construir con la mejor tecnología?</h3>
             <p>Solicita una cotización personalizada y descubre todas las ventajas</p>
             <button 
-              className="btn-cotizar"
+              className="btn-cotizar cotizar-principal"
               onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me interesa conocer más sobre construcción en seco', '_blank')}
             >
               <i className="fab fa-whatsapp"></i>

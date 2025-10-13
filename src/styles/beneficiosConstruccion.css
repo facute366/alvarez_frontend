@@ -336,6 +336,10 @@
   box-shadow: 0 12px 35px rgba(37, 211, 102, 0.5);
 }
 
+.cotizar-principal i {
+  font-size: 1.5rem;
+}
+
 .cta-stats {
   display: flex;
   flex-direction: column;

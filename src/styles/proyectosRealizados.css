@@ -548,6 +548,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
 }
 
 .btn-ver-todos:hover {
@@ -564,6 +565,12 @@
   margin: 0 auto;
   position: relative;
   z-index: 2;
+}
+
+.cta-stats-desktop{
+  display: flex;
+  justify-content: center;
+  flex-direction: row !important;
 }
 
 /* Asegurar que se mantenga horizontal en desktop */
@@ -731,7 +738,14 @@
   .cta-stats {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    max-width: 300px;
     text-align: center;
+  }
+
+  .btn-consultar {
+    width: 100%;
+  }
+
+  .btn-consultar i {
+    font-size: 20px;
   }
 }
