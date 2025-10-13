@@ -160,7 +160,7 @@ function ProyectosAdmin() {
     await api('/proyectos', { method: 'POST', body: fd });
   };
 
-  const actualizarProyecto = async () => {
+const actualizarProyecto = async () => {
     const id = proyectoForm.id || editingProyecto?.id;
     if (!id) throw new Error('Proyecto sin id');
 
@@ -171,42 +171,21 @@ function ProyectosAdmin() {
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
     };
 
-    // Separar fotos nuevas de las existentes y crear orden completo
-    const newFiles = fotoItems.filter(item => !item.isExisting).map(it => it.file);
-    const existingPhotos = fotoItems.filter(item => item.isExisting);
-    
-    // Crear arrays para el backend
-    const keepPhotos = existingPhotos.map(item => item.fotoId).filter(Boolean);
-    const photoOrder = fotoItems.map((item, index) => ({
-      id: item.isExisting ? item.fotoId : `new_${index}`,
-      order: index,
-      isExisting: item.isExisting
-    }));
+    const files = fotoItems.map(it => it.file);
+    console.time('[PROY] compresión total (edit)');
+    const comprimidas = await Promise.all(
+      files.map(async (f, i) => {
+        console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
+        const out = await compressImage(f);
+        console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
+        return out;
+      })
+    );
+    console.timeEnd('[PROY] compresión total (edit)');
 
     const fd = new FormData();
-    fd.append('data', JSON.stringify({
-      ...base,
-      keepPhotos: keepPhotos, // IDs de fotos a mantener
-      photoOrder: photoOrder, // Orden completo de las fotos
-      totalPhotos: fotoItems.length // Total de fotos después de la edición
-    }));
-
-    // Solo comprimir y enviar fotos nuevas
-    if (newFiles.length > 0) {
-      console.time('[PROY] compresión total (edit)');
-      const comprimidas = await Promise.all(
-        newFiles.map(async (f, i) => {
-          console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
-          const out = await compressImage(f);
-          console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
-          return out;
-        })
-      );
-      console.timeEnd('[PROY] compresión total (edit)');
-      
-      comprimidas.forEach((f) => fd.append('files', f));
-    }
-
+    fd.append('data', JSON.stringify(base));
+    comprimidas.forEach((f) => fd.append('files', f));
     await api(`/proyectos/${id}`, { method: 'PUT', body: fd });
   };
 
@@ -244,48 +223,7 @@ function ProyectosAdmin() {
       es_oculto: Boolean(proyecto.es_oculto),
     });
     setEditingProyecto(proyecto);
-    
-    // Cargar las fotos existentes del proyecto
-    revokeAllAndClear(); // limpiar fotos anteriores
-    
-    if (proyecto.fotos && Array.isArray(proyecto.fotos) && proyecto.fotos.length > 0) {
-      console.log('[EDIT] Fotos del proyecto:', proyecto.fotos); // Debug
-      
-      const existingFotoItems = proyecto.fotos.map((foto, index) => {
-        // Manejar diferentes estructuras de datos de fotos
-        let fotoUrl, fotoId;
-        
-        if (typeof foto === 'string') {
-          // Si es solo una URL string
-          fotoUrl = foto;
-          fotoId = `url_${index}`; // ID temporal para fotos que solo tienen URL
-        } else if (typeof foto === 'object') {
-          // Si es un objeto con propiedades
-          fotoUrl = foto.url || foto.imagen_url || foto.link || foto.src;
-          fotoId = foto.id || foto.foto_id || `obj_${index}`;
-        } else {
-          console.warn('[EDIT] Formato de foto no reconocido:', foto);
-          return null;
-        }
-        
-        if (!fotoUrl) {
-          console.warn('[EDIT] No se pudo obtener URL de la foto:', foto);
-          return null;
-        }
-        
-        return {
-          key: `existing_${fotoId}_${Date.now()}_${index}`,
-          file: null,
-          url: fotoUrl,
-          isExisting: true,
-          fotoId: fotoId,
-          originalIndex: index // Guardar el índice original
-        };
-      }).filter(Boolean); // Filtrar elementos null
-      
-      console.log('[EDIT] FotoItems creados:', existingFotoItems); // Debug
-      setFotoItems(existingFotoItems);
-    }
+    revokeAllAndClear(); // al entrar a editar, limpiamos selección previa
   };
 
   const resetProyectoForm = () => {
