@@ -37,6 +37,10 @@ function ProyectosAdmin() {
   const [categoriaForm, setCategoriaForm] = useState({ id: '', nombre: '' });
   const [editingCategoria, setEditingCategoria] = useState(null);
 
+  // Estados para búsqueda y filtros
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('todos');
+
   useEffect(() => {
     cargarCategorias();
     cargarProyectos();
@@ -552,8 +556,64 @@ const actualizarProyecto = async () => {
 
             <div className="admin-list-section">
               <h2>Proyectos Existentes</h2>
+              
+              {/* Buscador y Filtros */}
+              <div className="search-filters-section">
+                <div className="search-input-container">
+                  <i className="fas fa-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Buscar por título, descripción..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                  {searchTerm && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchTerm('')}
+                      className="clear-search"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  )}
+                </div>
+                
+                <div className="category-filters">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="category-filter-select"
+                  >
+                    <option value="todos">Todas las categorías</option>
+                    {categorias.map((categoria) => (
+                      <option key={categoria.id} value={categoria.id}>
+                        {categoria.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
               <div className="list-container">
-                {proyectos.map((proyecto) => (
+                {(() => {
+                  // Filtrar proyectos por búsqueda y categoría
+                  const filteredProyectos = proyectos.filter((proyecto) => {
+                    // Filtro por texto de búsqueda
+                    const matchesSearch = searchTerm === '' || 
+                      proyecto.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      proyecto.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      (proyecto.categoria?.nombre || '').toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    // Filtro por categoría
+                    const matchesCategory = selectedCategory === 'todos' || 
+                      Number(proyecto.categoria_id) === Number(selectedCategory) ||
+                      Number(proyecto.categoria?.id) === Number(selectedCategory);
+                    
+                    return matchesSearch && matchesCategory;
+                  });
+
+                  return filteredProyectos.length > 0 ? filteredProyectos.map((proyecto) => (
                   <div key={proyecto.id} className="list-item">
                     {/* Preview de imágenes */}
                     <div className="item-images">
@@ -607,8 +667,28 @@ const actualizarProyecto = async () => {
                       </button>
                     </div>
                   </div>
-                ))}
-                {proyectos.length === 0 && <p>No hay proyectos cargados.</p>}
+                  )) : (
+                    <div className="no-results">
+                      <i className="fas fa-search"></i>
+                      <p>No se encontraron proyectos con los filtros aplicados</p>
+                      <button 
+                        onClick={() => {
+                          setSearchTerm('');
+                          setSelectedCategory('todos');
+                        }}
+                        className="btn-secondary"
+                      >
+                        Limpiar filtros
+                      </button>
+                    </div>
+                  );
+                })()}
+                {proyectos.length === 0 && (
+                  <div className="no-results">
+                    <i className="fas fa-folder-open"></i>
+                    <p>No hay proyectos cargados.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
