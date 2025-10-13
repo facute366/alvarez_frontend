@@ -41,7 +41,13 @@ export default function GaleriaModal({ proyecto, isOpen, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>        
+        
+        <button className="btn-close" onClick={onClose}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+        </button>
         
         {/* Header del Modal */}
         <div className="modal-header">
@@ -49,64 +55,65 @@ export default function GaleriaModal({ proyecto, isOpen, onClose }) {
             <h2>{proyecto.titulo}</h2>
             <span className="categoria-pill">{proyecto.categoria.nombre}</span>
           </div>
-          <button className="btn-close" onClick={onClose}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-        </div>
+
+        </div>        
+        
+
 
         {/* Imagen Principal */}
-        <div className="imagen-principal-container">
-          <img 
-            src={proyecto.fotos[currentIndex]} 
-            alt={`${proyecto.titulo} - Imagen ${currentIndex + 1}`}
-            className="imagen-principal"
-          />
-          
-          {/* Controles de navegación */}
-          {proyecto.fotos.length > 1 && (
-            <>
-              <button className="nav-btn prev-btn" onClick={prevImage}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              
-              <button className="nav-btn next-btn" onClick={nextImage}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </>
-          )}
+        <div className="proyecto-imagenes-descripcion">
+          <div className="imagen-principal-container">
+            <img 
+              src={proyecto.fotos[currentIndex]} 
+              alt={`${proyecto.titulo} - Imagen ${currentIndex + 1}`}
+              className="imagen-principal"
+            />
+            
+            {/* Controles de navegación */}
+            {proyecto.fotos.length > 1 && (
+              <>
+                <button className="nav-btn prev-btn" onClick={prevImage}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                
+                <button className="nav-btn next-btn" onClick={nextImage}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </>
+            )}
 
-          {/* Contador de imágenes */}
-          <div className="imagen-counter">
-            {currentIndex + 1} / {proyecto.fotos.length}
-          </div>
+            {/* Contador de imágenes */}
+            <div className="imagen-counter">
+              {currentIndex + 1} / {proyecto.fotos.length}
+            </div>
+          
+          {/* Thumbnails */}
+          {proyecto.fotos.length > 1 && (
+            <div className="thumbnails-container">
+                {proyecto.fotos.map((foto, index) => (
+                  <div 
+                    key={index}
+                    className={`thumbnail-item ${index === currentIndex ? 'active' : ''}`}
+                    onClick={() => goToImage(index)}
+                  >
+                    <img src={foto} alt={`Thumbnail ${index + 1}`} />
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+            <div className="proyecto-descripcion">
+              <p>{proyecto.descripcion}</p>
+            </div>
         </div>
 
-        {/* Thumbnails */}
-        {proyecto.fotos.length > 1 && (
-          <div className="thumbnails-container">
-            {proyecto.fotos.map((foto, index) => (
-              <div 
-                key={index}
-                className={`thumbnail-item ${index === currentIndex ? 'active' : ''}`}
-                onClick={() => goToImage(index)}
-              >
-                <img src={foto} alt={`Thumbnail ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Footer con información */}
         <div className="modal-footer">
-          <div className="proyecto-descripcion">
-            <p>{proyecto.descripcion}</p>
-          </div>
           
           <div className="modal-actions">
             <button 

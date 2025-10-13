@@ -236,7 +236,7 @@ function ProyectosRealizados() {
                   </div>
                 </div>
                 
-                <p className="proyecto-descripcion">{proyecto.descripcion}</p>
+
                 
                 <div className="proyecto-actions">
                   <button className="btn-ver-detalle" onClick={() => abrirModal(proyecto)}>
