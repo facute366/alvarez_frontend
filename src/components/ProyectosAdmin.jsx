@@ -8,31 +8,6 @@ import Sortable from 'sortablejs'; // <- igual que en MCL
 
 const API = 'https://alvarez-back.vercel.app';
 
-function sortFotosRobusto(fotosRaw = []) {
-  const key = (f) => {
-    // 1) campos de orden típicos si existen
-    const cand = Number(
-      f?.orden ?? f?.prioridad ?? f?.pos ?? f?.position ?? f?.index ?? f?.id
-    );
-    if (Number.isFinite(cand)) return cand;
-
-    // 2) extraer prefijo 000__ del nombre o del link
-    const nombre =
-      (f?.nombre || f?.name || f?.link || '')
-        .toString()
-        .split('?')[0] // por si trae querystring
-        .split('/').pop(); // solo el filename
-    const m = nombre?.match(/^(\d{3,})__/);
-    if (m) return Number(m[1]);
-
-    // 3) último recurso
-    return Number.MAX_SAFE_INTEGER;
-  };
-
-  return [...fotosRaw].sort((a, b) => key(a) - key(b));
-}
-
-
 function ProyectosAdmin() {
   useAdminGuard();
 
@@ -101,42 +76,34 @@ function ProyectosAdmin() {
             const catNombre = cat?.nombre ?? cat?.name ?? 'Sin categoría';
             const proys = Array.isArray(cat?.Proyectos || cat?.proyectos) ? (cat.Proyectos || cat.proyectos) : [];
             proys.forEach((p) => {
-              const fotosRaw = Array.isArray(p?.Fotos) ? p.Fotos : (Array.isArray(p?.fotos) ? p.fotos : []);
-              const fotosOrdenadas = sortFotosRobusto(fotosRaw).map(f => f?.link || f).filter(Boolean);
-
               out.push({
                 id: p?.id,
                 titulo: p?.titulo ?? '',
                 descripcion: p?.descripcion ?? '',
                 categoria_id: Number(p?.id_categoria ?? catId),
                 es_oculto: Boolean(p?.es_oculto),
-                fotos: fotosOrdenadas,
+                fotos: Array.isArray(p?.Fotos) ? p.Fotos.map(f => f?.link).filter(Boolean) : (Array.isArray(p?.fotos) ? p.fotos : []),
                 categoria: { id: catId, nombre: catNombre },
               });
             });
           });
           return out;
         }
-
         if (Array.isArray(data)) {
           return data.filter(Boolean).map((p) => {
             const catId = Number(p?.id_categoria ?? p?.categoria_id ?? p?.categoria?.id ?? 0);
             const catNombre = p?.categoria?.nombre ?? 'Sin categoría';
-            const fotosRaw = Array.isArray(p?.Fotos) ? p.Fotos : (Array.isArray(p?.fotos) ? p.fotos : []);
-            const fotosOrdenadas = sortFotosRobusto(fotosRaw).map(f => f?.link || f).filter(Boolean);
-
             return {
               id: p?.id,
               titulo: p?.titulo ?? '',
               descripcion: p?.descripcion ?? '',
               categoria_id: catId,
               es_oculto: Boolean(p?.es_oculto),
-              fotos: fotosOrdenadas,
+              fotos: Array.isArray(p?.Fotos) ? p.Fotos.map(f => f?.link).filter(Boolean) : (Array.isArray(p?.fotos) ? p.fotos : []),
               categoria: catNombre ? { id: catId, nombre: catNombre } : null,
             };
           });
         }
-
         const arr = data?.Proyectos || data?.proyectos || data?.data || [];
         if (Array.isArray(arr)) return parse(arr);
         return [];
@@ -171,40 +138,31 @@ function ProyectosAdmin() {
     }
   };
 
-const crearProyecto = async () => {
-  const base = {
-    titulo: proyectoForm.titulo.trim(),
-    descripcion: proyectoForm.descripcion.trim(),
-    id_categoria: Number(proyectoForm.categoria_id),
-    es_oculto: proyectoForm.es_oculto ? 1 : 0,
+  const crearProyecto = async () => {
+    const base = {
+      titulo: proyectoForm.titulo.trim(),
+      descripcion: proyectoForm.descripcion.trim(),
+      id_categoria: Number(proyectoForm.categoria_id),
+      es_oculto: proyectoForm.es_oculto ? 1 : 0,
+    };
+
+    const files = fotoItems.map(it => it.file); // respeta el orden del usuario
+    console.time('[PROY] compresión total');
+    const comprimidas = await Promise.all(
+      files.map(async (f, i) => {
+        console.log(`[PROY] original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
+        const out = await compressImage(f);
+        console.log(`[PROY] comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
+        return out;
+      })
+    );
+    console.timeEnd('[PROY] compresión total');
+
+    const fd = new FormData();
+    fd.append('data', JSON.stringify(base));
+    comprimidas.forEach((f) => fd.append('files', f));
+    await api('/proyectos', { method: 'POST', body: fd });
   };
-
-  const files = fotoItems.map(it => it.file); // orden del usuario
-
-  console.time('[PROY] compresión total');
-  const comprimidas = await Promise.all(
-    files.map(async (f, i) => {
-      console.log(`[PROY] original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
-      const out = await compressImage(f);
-      console.log(`[PROY] comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
-      return out;
-    })
-  );
-  console.timeEnd('[PROY] compresión total');
-
-  // 🔒 Prefijamos con índice 000__, 001__, 002__ ...
-  const indexados = comprimidas.map((f, i) => {
-    const baseName = (f.name || `foto-${i}.jpg`).replace(/\s+/g, '_');
-    const nombre = `${String(i).padStart(3, '0')}__${baseName.replace(/^(\d+__)/, '')}`;
-    return new File([f], nombre, { type: 'image/jpeg' });
-  });
-
-  const fd = new FormData();
-  fd.append('data', JSON.stringify(base));
-  indexados.forEach(f => fd.append('files', f));
-
-  await api('/proyectos', { method: 'POST', body: fd });
-};
 
 const actualizarProyecto = async () => {
     const id = proyectoForm.id || editingProyecto?.id;
