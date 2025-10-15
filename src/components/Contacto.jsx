@@ -20,7 +20,7 @@ function Contacto() {
     e.preventDefault();
     // Crear mensaje para WhatsApp
     const mensaje = `Hola! Mi nombre es ${formData.nombre}.%0A%0ATeléfono: ${formData.telefono}%0AEmail: ${formData.email}%0A%0AMensaje: ${formData.mensaje}`;
-    const whatsappURL = `https://wa.me/1234567890?text=${mensaje}`;
+    const whatsappURL = `https://wa.me/3572445578?text=${mensaje}`;
     
     // Abrir WhatsApp
     window.open(whatsappURL, '_blank');
@@ -117,7 +117,7 @@ function Contacto() {
                 </div>
                 <div className="contacto-texto">
                   <h4>Dirección</h4>
-                  <p>Av. Principal 1234<br />Ciudad, Provincia<br />Código Postal</p>
+                  <p>Andrés Ratti 200<br />Rio Segundo, Cordoba<br />5960</p>
                 </div>
               </div>
 
@@ -127,7 +127,7 @@ function Contacto() {
                 </div>
                 <div className="contacto-texto">
                   <h4>Teléfono</h4>
-                  <p>+54 11 1234-5678</p>
+                  <p>+54 9 3572 445578</p>
                 </div>
               </div>
 
@@ -137,7 +137,7 @@ function Contacto() {
                 </div>
                 <div className="contacto-texto">
                   <h4>Email</h4>
-                  <p>info@alvarez.com</p>
+                  <p>alvarezconstrucciones04@gmail.com</p>
                 </div>
               </div>
 
@@ -155,13 +155,13 @@ function Contacto() {
               <div className="redes-sociales">
                 <h4>Síguenos en:</h4>
                 <div className="redes-iconos">
-                  <a href="https://facebook.com/alvarez" target="_blank" rel="noopener noreferrer" className="red-social facebook">
+                  <a href="https://www.facebook.com/share/19poMGDR4v/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="red-social facebook">
                     <i className="fab fa-facebook-f"></i>
                   </a>
-                  <a href="https://instagram.com/alvarez" target="_blank" rel="noopener noreferrer" className="red-social instagram">
+                  <a href="https://www.instagram.com/alvarezconstruccionenseco/?hl=es" target="_blank" rel="noopener noreferrer" className="red-social instagram">
                     <i className="fab fa-instagram"></i>
                   </a>
-                  <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="red-social whatsapp">
+                  <a href="https://wa.me/3572445578" target="_blank" rel="noopener noreferrer" className="red-social whatsapp">
                     <i className="fab fa-whatsapp"></i>
                   </a>
                 </div>
@@ -174,7 +174,7 @@ function Contacto() {
 
       {/* Botón WhatsApp Flotante */}
       <div className="whatsapp-flotante">
-        <a href="https://wa.me/1234567890?text=Hola! Me gustaría hacer una consulta" target="_blank" rel="noopener noreferrer">
+        <a href="https://wa.me/3572445578?text=Hola! Me gustaría hacer una consulta" target="_blank" rel="noopener noreferrer">
           <i className="fab fa-whatsapp"></i>
         </a>
       </div>

@@ -48,6 +48,7 @@ export default function Footer() {
                 >
                   <i className="fab fa-instagram"></i>
                 </a>
+
                 <a
                   href="https://wa.me/5493572445578"
                   target="_blank"
@@ -57,7 +58,18 @@ export default function Footer() {
                 >
                   <i className="fab fa-whatsapp"></i>
                 </a>
+
+                <a
+                  href="https://www.facebook.com/share/19poMGDR4v/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="social-link facebook"
+                >
+                  <i className="fab fa-facebook-f"></i>
+                </a>
               </div>
+
             </div>
 
             {/* Servicios */}
@@ -96,7 +108,7 @@ export default function Footer() {
                 <div className="contact-item">
                   <i className="fas fa-phone-alt"></i>
                   <div className="contact-text">
-                    <span>+54 3572 445578</span>
+                    <span>+54 9 3572 445578</span>
                   </div>
                 </div>
                 <div className="contact-item">
