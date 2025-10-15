@@ -8,36 +8,38 @@ import Sortable from 'sortablejs'; // <- igual que en MCL
 
 const API = 'https://alvarez-back.vercel.app';
 
+// NUEVO: Helper para generar una clave única y consistente para cada foto
+const generateKey = (item) => {
+  if (item instanceof File) {
+    // Para archivos, la clave se basa en sus propiedades inmutables
+    return `file-${item.name}-${item.lastModified}-${item.size}`;
+  }
+  // Para URLs, la clave es la propia URL (que es única)
+  return `url-${item}`;
+};
+
 function ProyectosAdmin() {
   useAdminGuard();
 
-  // Tabs / loading
+  // Estados del componente (sin cambios)
   const [activeTab, setActiveTab] = useState('proyectos');
   const [loading, setLoading] = useState(false);
-
-  // Proyectos
   const [proyectos, setProyectos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [proyectoForm, setProyectoForm] = useState({
-    id: '',
-    titulo: '',
-    descripcion: '',
-    categoria_id: '',
-    es_oculto: false,
+    id: '', titulo: '', descripcion: '', categoria_id: '', es_oculto: false,
   });
   const [editingProyecto, setEditingProyecto] = useState(null);
 
-  // --- Selección de fotos (estilo MCL): [{ key, file, url }]
+  // MODIFICADO: Estructura de estado para las fotos. Unificada y más clara.
+  // Cada item será: { key: string, url: string, file?: File, isExisting: boolean }
   const [fotoItems, setFotoItems] = useState([]);
   const fileInputRef = useRef(null);
-  const previewRef = useRef(null);     // contenedor de la grilla
-  const sortableRef = useRef(null);    // instancia Sortable
+  const previewRef = useRef(null);
+  const sortableRef = useRef(null);
 
-  // Categorías
   const [categoriaForm, setCategoriaForm] = useState({ id: '', nombre: '' });
   const [editingCategoria, setEditingCategoria] = useState(null);
-
-  // Estados para búsqueda y filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todos');
 
@@ -46,16 +48,13 @@ function ProyectosAdmin() {
     cargarProyectos();
   }, []);
 
-  // ====== API helper ======
+  // ====== API helper (sin cambios) ======
   async function api(path, options = {}) {
     const url = `${API}${path}`;
     const res = await fetchWithAuth(url, options);
     if (!res.ok) {
       console.error('[API ERROR]', { path, method: options.method, status: res.status, data: res.data });
-      const msg =
-        (res.data && (res.data.message || res.data.error || res.data.msg)) ||
-        `HTTP ${res.status}` ||
-        'Error imprevisto.';
+      const msg = (res.data && (res.data.message || res.data.error || res.data.msg)) || `HTTP ${res.status}` || 'Error imprevisto.';
       Swal.fire({ icon: 'error', title: 'Error', text: String(msg) });
       throw new Error(String(msg));
     }
@@ -132,7 +131,7 @@ function ProyectosAdmin() {
       await cargarProyectos();
     } catch (err) {
       console.error(err);
-      mostrarError('Error al guardar el proyecto');
+      // El error ya lo muestra la función `api`, no es necesario un `mostrarError` aquí.
     } finally {
       setLoading(false);
     }
@@ -146,15 +145,17 @@ function ProyectosAdmin() {
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
     };
 
-    const files = fotoItems.map(it => it.file); // respeta el orden del usuario
+    // Obtenemos solo los archivos de los items (el orden ya es el correcto)
+    const files = fotoItems.map(it => it.file).filter(Boolean);
+
+    if (files.length === 0) {
+      Swal.fire('Atención', 'Debes agregar al menos una imagen para crear el proyecto.', 'warning');
+      throw new Error('No hay imágenes');
+    }
+
     console.time('[PROY] compresión total');
     const comprimidas = await Promise.all(
-      files.map(async (f, i) => {
-        console.log(`[PROY] original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
-        const out = await compressImage(f);
-        console.log(`[PROY] comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
-        return out;
-      })
+      files.map(async (f) => await compressImage(f))
     );
     console.timeEnd('[PROY] compresión total');
 
@@ -164,32 +165,45 @@ function ProyectosAdmin() {
     await api('/proyectos', { method: 'POST', body: fd });
   };
 
-const actualizarProyecto = async () => {
+  // MODIFICADO: Lógica de actualización completamente refactorizada
+  const actualizarProyecto = async () => {
     const id = proyectoForm.id || editingProyecto?.id;
     if (!id) throw new Error('Proyecto sin id');
+
+    // 1. Separar fotos existentes (URLs) de las nuevas (Files)
+    const fotosNuevas = fotoItems.filter(item => !item.isExisting && item.file);
+    const urlsExistentesOrdenadas = fotoItems
+      .filter(item => item.isExisting)
+      .map(item => item.url);
 
     const base = {
       titulo: proyectoForm.titulo.trim(),
       descripcion: proyectoForm.descripcion.trim(),
       id_categoria: Number(proyectoForm.categoria_id),
       es_oculto: proyectoForm.es_oculto ? 1 : 0,
+      // Se envía el array con el orden final de las fotos existentes.
+      // El backend debe usar esto para reordenar y eliminar las que ya no están.
+      fotos_orden: urlsExistentesOrdenadas,
     };
 
-    const files = fotoItems.map(it => it.file);
-    console.time('[PROY] compresión total (edit)');
-    const comprimidas = await Promise.all(
-      files.map(async (f, i) => {
-        console.log(`[PROY] (edit) original #${i + 1}: ${f.name} - ${(f.size / 1024).toFixed(1)} KB`);
-        const out = await compressImage(f);
-        console.log(`[PROY] (edit) comprimida #${i + 1}: ${out.name} - ${(out.size / 1024).toFixed(1)} KB`);
-        return out;
-      })
-    );
-    console.timeEnd('[PROY] compresión total (edit)');
+    // 2. Comprimir solo las fotos nuevas
+    let comprimidas = [];
+    if (fotosNuevas.length > 0) {
+      console.time('[PROY] compresión total (edit)');
+      comprimidas = await Promise.all(
+        fotosNuevas.map(async (item) => await compressImage(item.file))
+      );
+      console.timeEnd('[PROY] compresión total (edit)');
+    }
 
+    // 3. Construir FormData
     const fd = new FormData();
     fd.append('data', JSON.stringify(base));
-    comprimidas.forEach((f) => fd.append('files', f));
+    if (comprimidas.length > 0) {
+      comprimidas.forEach((f) => fd.append('files', f));
+    }
+
+    // NOTA: El backend debe estar preparado para recibir 'fotos_orden' (JSON) y 'files' (archivos).
     await api(`/proyectos/${id}`, { method: 'PUT', body: fd });
   };
 
@@ -218,7 +232,10 @@ const actualizarProyecto = async () => {
     }
   };
 
+    // MODIFICADO: Carga las fotos existentes en el estado al editar
   const editarProyecto = (proyecto) => {
+    resetProyectoForm(); // Limpia cualquier estado anterior antes de cargar el nuevo
+
     setProyectoForm({
       id: proyecto.id,
       titulo: proyecto.titulo ?? '',
@@ -227,15 +244,34 @@ const actualizarProyecto = async () => {
       es_oculto: Boolean(proyecto.es_oculto),
     });
     setEditingProyecto(proyecto);
-    revokeAllAndClear(); // al entrar a editar, limpiamos selección previa
+
+    // Cargar las fotos existentes del proyecto en el estado `fotoItems`
+    const fotosExistentes = (proyecto.fotos || []).map(url => ({
+      key: generateKey(url),
+      url: url,
+      isExisting: true, // Marcar como existente
+    }));
+    setFotoItems(fotosExistentes);
+    
+    // Opcional: scroll hacia el formulario para mejor UX
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // MODIFICADO: Lógica de reseteo unificada
   const resetProyectoForm = () => {
     setProyectoForm({ id: '', titulo: '', descripcion: '', categoria_id: '', es_oculto: false });
     setEditingProyecto(null);
-    revokeAllAndClear();
-  };
+    
+    // Limpieza de Object URLs para prevenir memory leaks
+    fotoItems.forEach(it => {
+      if (!it.isExisting && it.url) {
+        URL.revokeObjectURL(it.url);
+      }
+    });
+    setFotoItems([]);
 
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
   // ====== CATEGORÍAS ======
   const cargarCategorias = async () => {
     try {
@@ -330,41 +366,36 @@ const actualizarProyecto = async () => {
   const makeKey = (f, idx) => `${f.name}__${f.size}__${f.lastModified}__${idx}`;
 
   // reemplaza la selección completa (revoca las urls anteriores)
- const handleFotosChange = (e) => {
-  const files = Array.from(e.target.files || []);
-  
-  // Mantener las fotos existentes
-  const existingPhotos = fotoItems.filter(item => item.isExisting);
-  
-  // Crear nuevos items solo para las fotos nuevas
-  const newItems = files.map((f, i) => ({
-    key: makeKey(f, i + existingPhotos.length),
-    file: f,
-    url: URL.createObjectURL(f),
-    isExisting: false
-  }));
-  
-  // Combinar fotos existentes con las nuevas
-  setFotoItems([...existingPhotos, ...newItems]);
-};
+  // NUEVO: Maneja la selección de nuevos archivos y los añade al estado.
+  const handleFotosChange = (e) => {
+    const nuevosFiles = Array.from(e.target.files || []);
+    const nuevosItems = nuevosFiles.map(file => ({
+      key: generateKey(file),
+      file: file,
+      url: URL.createObjectURL(file), // Crear URL local para previsualización
+      isExisting: false,
+    }));
 
-  // quitar una imagen (revoca solo esa)
-  const removeAt = (idx) => {
-    setFotoItems((prev) => {
-      const next = [...prev];
-      const [removed] = next.splice(idx, 1);
-      
-      // Solo revocar URL si no es una foto existente
-      if (removed && !removed.isExisting) {
-        URL.revokeObjectURL(removed.url);
-      }
-      
-      if (next.length === 0 && fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-      return next;
+    // Añade los nuevos items a los ya existentes (evita duplicados por si se selecciona el mismo archivo)
+    setFotoItems(prev => {
+        const prevKeys = new Set(prev.map(p => p.key));
+        const itemsSinDuplicados = nuevosItems.filter(n => !prevKeys.has(n.key));
+        return [...prev, ...itemsSinDuplicados];
     });
   };
+
+   // NUEVO: Elimina una foto de la lista por su key.
+  const removeFotoByKey = (keyToRemove) => {
+    setFotoItems((prev) => {
+      const itemARemover = prev.find(item => item.key === keyToRemove);
+      // Si era un archivo nuevo, revocar su URL
+      if (itemARemover && !itemARemover.isExisting) {
+        URL.revokeObjectURL(itemARemover.url);
+      }
+      return prev.filter(item => item.key !== keyToRemove);
+    });
+  };
+
 
   const revokeAllAndClear = () => {
     // Solo revocar URLs de fotos nuevas (no existentes)
@@ -382,23 +413,17 @@ const actualizarProyecto = async () => {
     const el = previewRef.current;
     if (!el) return;
 
-    // destruir previa
     if (sortableRef.current) {
       sortableRef.current.destroy();
-      sortableRef.current = null;
     }
 
-    if (!fotoItems.length) return;
+    if (fotoItems.length === 0) return;
 
     sortableRef.current = Sortable.create(el, {
       animation: 150,
-      ghostClass: 'drag-ghost',     // clases para estilos
-      chosenClass: 'drag-chosen',
-      dragClass: 'dragging',
-      // importante para mobile:
-      // (Sortable ya maneja touch, no uses HTML5 drag)
+      ghostClass: 'drag-ghost',
       onEnd: () => {
-        // leer nuevo orden desde el DOM (data-key en cada hijo)
+        // Sincronizar el estado de React con el nuevo orden del DOM
         const orderKeys = Array.from(el.children).map((n) => n.getAttribute('data-key'));
         setFotoItems((prev) => {
           const map = new Map(prev.map((it) => [it.key, it]));
@@ -413,11 +438,13 @@ const actualizarProyecto = async () => {
         sortableRef.current = null;
       }
     };
-  }, [fotoItems]);
+  }, [fotoItems]); // Se re-ejecuta cuando `fotoItems` cambia, que es lo correcto.
+
 
   // ====== UI helpers ======
   const mostrarExito = (mensaje) => Swal.fire({ icon: 'success', title: 'Éxito', text: mensaje, timer: 1800, showConfirmButton: false });
   const mostrarError = (mensaje) => Swal.fire({ icon: 'error', title: 'Error', text: mensaje });
+
 
   // ====== RENDER ======
   return (
