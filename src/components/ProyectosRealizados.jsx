@@ -269,11 +269,11 @@ function ProyectosRealizados() {
           
           <div className="cta-stats cta-stats-desktop">
             <div className="stat">
-              <div className="stat-number">{proyectos.length}+</div>
+              <div className="stat-number">+100</div>
               <div className="stat-label">Proyectos</div>
             </div>
             <div className="stat">
-              <div className="stat-number">5+</div>
+              <div className="stat-number">+5</div>
               <div className="stat-label">Años</div>
             </div>
             <div className="stat">

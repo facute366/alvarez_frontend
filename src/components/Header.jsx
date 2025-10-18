@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/header.css";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Link as ScrollLink, scroller } from 'react-scroll';
+import { scroller } from 'react-scroll';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -29,6 +29,18 @@ export default function Header() {
     closeMenu();
   };
 
+  // 👉 función para ir a proyectos page
+  const goToProyectos = () => {
+    navigate("/proyectos");
+    setTimeout(() => {
+      const element = document.getElementById("proyectos-page");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+    closeMenu();
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -48,16 +60,18 @@ export default function Header() {
           ) : (
             <>
               <Link to="/" className="nav-link">Inicio</Link>
-              <ScrollLink to="sobre-nosotros" smooth duration={600} offset={-80} className="nav-link">
+              <button type="button" className="nav-link" onClick={() => goTo('sobre-nosotros')}>
                 Nosotros
-              </ScrollLink>
-              <Link to="/proyectos" className="nav-link">Proyectos</Link>
-              <ScrollLink to="beneficios" smooth duration={600} offset={-80} className="nav-link">
+              </button>
+              <button type="button" className="nav-link" onClick={goToProyectos}>
+                Proyectos
+              </button>
+              <button type="button" className="nav-link" onClick={() => goTo('beneficios')}>
                 Beneficios
-              </ScrollLink>
-              <ScrollLink to="contacto" smooth duration={600} offset={-80} className="nav-link">
+              </button>
+              <button type="button" className="nav-link" onClick={() => goTo('contacto')}>
                 Contacto
-              </ScrollLink>
+              </button>
             </>
           )}
         </nav>
@@ -94,7 +108,9 @@ export default function Header() {
               <button type="button" className="nav-link" onClick={() => goTo('sobre-nosotros')}>
                 Nosotros
               </button>
-              <Link to="/proyectos" className="nav-link" onClick={closeMenu}>Proyectos</Link>
+              <button type="button" className="nav-link" onClick={goToProyectos}>
+                Proyectos
+              </button>
               <button type="button" className="nav-link" onClick={() => goTo('beneficios')}>
                 Beneficios
               </button>

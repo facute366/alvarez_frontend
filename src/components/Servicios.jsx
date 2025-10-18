@@ -34,7 +34,7 @@ function Servicios() {
           </div>
           <div className="servicio-imagen">
             <img src="/path/to/cielorrasos.jpg" alt="Cielorrasos" />
-            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Cielorrasos', '_blank')}>
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/5493572445578?text=Consulta sobre Cielorrasos', '_blank')}>
               Consultar
               <i className="fas fa-arrow-right"></i>
             </button>
@@ -48,7 +48,7 @@ function Servicios() {
         <div className="servicio-contenido">
           <div className="servicio-imagen">
             <img src="/path/to/placares-muebles.jpg" alt="Placares y muebles a medida" />
-            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Placares y Muebles', '_blank')}>
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/5493572445578?text=Consulta sobre Placares y Muebles', '_blank')}>
               Consultar
               <i className="fas fa-arrow-right"></i>
             </button>
@@ -80,7 +80,7 @@ function Servicios() {
           </div>
           <div className="servicio-imagen">
             <img src="/path/to/revestimientos.jpg" alt="Revestimientos" />
-            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Revestimientos', '_blank')}>
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/5493572445578?text=Consulta sobre Revestimientos', '_blank')}>
               Consultar
               <i className="fas fa-arrow-right"></i>
             </button>
@@ -94,7 +94,7 @@ function Servicios() {
         <div className="servicio-contenido">
           <div className="servicio-imagen">
             <img src="/path/to/oficinas-locales.jpg" alt="Oficinas y locales comerciales" />
-            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Oficinas y Locales Comerciales', '_blank')}>
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/5493572445578?text=Consulta sobre Oficinas y Locales Comerciales', '_blank')}>
               Consultar
               <i className="fas fa-arrow-right"></i>
             </button>
@@ -126,7 +126,7 @@ function Servicios() {
           </div>
           <div className="servicio-imagen">
             <img src="/path/to/steel-framing.jpg" alt="Steel Framing" />
-            <button className="btn-consultar" onClick={() => window.open('https://wa.me/1234567890?text=Consulta sobre Steel Framing', '_blank')}>
+            <button className="btn-consultar" onClick={() => window.open('https://wa.me/5493572445578?text=Consulta sobre Steel Framing', '_blank')}>
               Consultar
               <i className="fas fa-arrow-right"></i>
             </button>
@@ -143,7 +143,7 @@ function Servicios() {
           <div className="cta-content">
             <h3>¿Tienes un proyecto en mente?</h3>
             <p>Contáctanos y recibe una cotización personalizada sin compromiso</p>
-            <button className="btn-cta" onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me gustaría recibir información sobre sus servicios', '_blank')}>
+            <button className="btn-cta" onClick={() => window.open('https://wa.me/5493572445578?text=Hola! Me gustaría recibir información sobre sus servicios', '_blank')}>
               <i className="fab fa-whatsapp"></i>
               Solicitar Cotización
             </button>
@@ -237,7 +237,7 @@ function Servicios() {
             <h3>¿Listo para comenzar tu proyecto?</h3>
             <button 
               className="btn-proceso" 
-              onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me gustaría conocer más sobre su proceso de trabajo', '_blank')}
+              onClick={() => window.open('https://wa.me/5493572445578?text=Hola! Me gustaría conocer más sobre su proceso de trabajo', '_blank')}
             >
               Iniciar Mi Proyecto
               <i className="fas fa-play"></i>

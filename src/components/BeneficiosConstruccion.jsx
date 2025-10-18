@@ -2,7 +2,7 @@ import "../styles/beneficiosConstruccion.css";
 
 function BeneficiosConstruccion() {
   return (
-    <section className="beneficios-construccion">
+    <section id="beneficios" className="beneficios-construccion">
       <div className="contenedor">
         
         {/* Header */}
@@ -164,7 +164,7 @@ function BeneficiosConstruccion() {
             <p>Solicita una cotización personalizada y descubre todas las ventajas</p>
             <button 
               className="btn-cotizar cotizar-principal"
-              onClick={() => window.open('https://wa.me/1234567890?text=Hola! Me interesa conocer más sobre construcción en seco', '_blank')}
+              onClick={() => window.open('https://wa.me/5493572445578?text=Hola! Me interesa conocer más sobre construcción en seco', '_blank')}
             >
               <i className="fab fa-whatsapp"></i>
               Solicitar Cotización

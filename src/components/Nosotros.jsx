@@ -2,7 +2,7 @@ import "../styles/nosotros.css";
 
 function SobreNosotros() {
   return (
-    <section className="sobre-nosotros">
+    <section id="nosotros" className="sobre-nosotros">
       
       {/* Hero Section */}
       <div className="nosotros-hero">
@@ -18,11 +18,11 @@ function SobreNosotros() {
             </div>
             <div className="hero-stats">
               <div className="stat-item">
-                <div className="stat-number-nosotros">5+</div>
+                <div className="stat-number-nosotros">+5</div>
                 <div className="stat-label-nosotros">Años de Experiencia</div>
               </div>
               <div className="stat-item">
-                <div className="stat-number-nosotros">100+</div>
+                <div className="stat-number-nosotros">+100</div>
                 <div className="stat-label-nosotros">Proyectos Completados</div>
               </div>
               <div className="stat-item">
@@ -116,7 +116,10 @@ function SobreNosotros() {
                 </div>
               </div>
 
-              <button className="btn-conocer-mas">
+              <button 
+                className="btn-conocer-mas"
+                onClick={() => window.open('https://wa.me/5493572445578?text=Hola! Me gustaría conocer más sobre su empresa y servicios', '_blank')}
+              >
                 Conocer Más Sobre Nosotros
                 <i className="fas fa-arrow-right"></i>
               </button>

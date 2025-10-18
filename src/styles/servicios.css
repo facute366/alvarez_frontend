@@ -30,7 +30,7 @@
 
 .header-content {
   text-align: center;
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -257,6 +257,10 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.btn-cta i {
+  font-size: 1.4rem;
 }
 
 .btn-cta:hover {
@@ -494,6 +498,39 @@
 /* ===========================
    Responsive Design - MEJORADO
    =========================== */
+
+/* Notebooks y dispositivos medianos (769px - 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .header-content,
+  .servicios-lista-section,
+  .proceso-header,
+  .proceso-timeline {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Desktop pequeño (1201px - 1400px) */
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .header-content,
+  .servicios-lista-section,
+  .proceso-header,
+  .proceso-timeline {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Desktop grande (más de 1400px) */
+@media (min-width: 1401px) {
+  .header-content,
+  .servicios-lista-section,
+  .proceso-header,
+  .proceso-timeline {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
 
 /* Tablets grandes */
 @media (max-width: 1024px) {

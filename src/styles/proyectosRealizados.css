@@ -553,8 +553,9 @@
 
 .btn-ver-todos:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  background: #f8f9fa;
+  box-shadow: 0 10px 25px rgba(21, 78, 162, 0.3);
+  background: var(--color-light);
+  color: var(--color-black);
 }
 
 .cta-stats-principal {

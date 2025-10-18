@@ -164,7 +164,7 @@ function Proyectos() {
   }
 
   return (
-    <div className="proyectos-page">
+    <div id="proyectos-page" className="proyectos-page">
       <div className="contenedor">
         
         {/* Header */}

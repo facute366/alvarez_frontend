@@ -213,7 +213,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -442,6 +442,57 @@
 /* ===========================
    Responsive Design - MEJORADO
    =========================== */
+
+/* Notebooks y dispositivos medianos (769px - 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .hero-content,
+  .timeline,
+  .valores-header,
+  .valores-container,
+  .equipo-grid {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .historia-timeline h2 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Desktop pequeño (1201px - 1400px) */
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .hero-content,
+  .timeline,
+  .valores-header,
+  .valores-container,
+  .equipo-grid {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+  
+  .historia-timeline h2 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Desktop grande (más de 1400px) */
+@media (min-width: 1401px) {
+  .hero-content,
+  .timeline,
+  .valores-header,
+  .valores-container,
+  .equipo-grid {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+  
+  .historia-timeline h2 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
 
 /* Tablets grandes */
 @media (max-width: 1024px) {

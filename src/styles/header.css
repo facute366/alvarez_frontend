@@ -45,6 +45,37 @@
   gap: 2rem;
 }
 
+.nav-desktop a {
+  color: var(--color-black);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.nav-desktop a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primario);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-desktop a:hover {
+  color: var(--primario);
+  transform: translateY(-2px);
+}
+
+.nav-desktop a:hover::after {
+  width: 100%;
+}
+
 .nav-link {
   color: var(--color-black);
   text-decoration: none;
@@ -57,16 +88,58 @@
   color: var(--primario);
 }
 
+/* Estilos para botones nav-link */
+button.nav-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+/* Asegurar que los botones nav-link en desktop tengan los mismos estilos */
+.nav-desktop button.nav-link {
+  color: var(--color-black);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.nav-desktop button.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primario);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-desktop button.nav-link:hover {
+  color: var(--primario);
+  transform: translateY(-2px);
+}
+
+.nav-desktop button.nav-link:hover::after {
+  width: 100%;
+}
+
 /* User Icon */
 .user-icon {
   color: var(--primario);
   padding: 8px;
   border-radius: 8px;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .user-icon:hover {
-  background-color: #f8f9fa;
+  background-color: var(--color-light);
+  color: var(--color-black);
 }
 
 /* Mobile Menu Button */

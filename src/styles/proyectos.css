@@ -475,6 +475,10 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
+.btn-contactar i {
+  font-size: 1.4rem;
+}
+
 .btn-contactar:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -499,6 +503,67 @@
 }
 
 /* ===========================
+   Márgenes Responsivos
+   =========================== */
+
+/* Notebooks y dispositivos medianos (769px - 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .proyectos-page-header {
+    padding: 3rem 2rem;
+  }
+  
+  .proyectos-filtros {
+    padding: 0 2rem;
+  }
+  
+  .proyectos-full-grid {
+    padding: 0 2rem;
+  }
+  
+  .proyectos-bottom-cta {
+    margin: 0 2rem;
+  }
+}
+
+/* Desktop pequeño (1201px - 1400px) */
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .proyectos-page-header {
+    padding: 3rem 2.5rem;
+  }
+  
+  .proyectos-filtros {
+    padding: 0 2.5rem;
+  }
+  
+  .proyectos-full-grid {
+    padding: 0 2.5rem;
+  }
+  
+  .proyectos-bottom-cta {
+    margin: 0 2.5rem;
+  }
+}
+
+/* Desktop grande (más de 1400px) */
+@media (min-width: 1401px) {
+  .proyectos-page-header {
+    padding: 3rem 1rem;
+  }
+  
+  .proyectos-filtros {
+    padding: 0 1rem;
+  }
+  
+  .proyectos-full-grid {
+    padding: 0 1rem;
+  }
+  
+  .proyectos-bottom-cta {
+    margin: 0 1rem;
+  }
+}
+
+/* ===========================
    Responsive
    =========================== */
 @media (max-width: 1024px) {
@@ -510,8 +575,26 @@
 }
 
 @media (max-width: 768px) {
+  .proyectos-page-header {
+    padding: 2rem 1.5rem;
+  }
+  
   .proyectos-page-header h1 {
     font-size: 2.5rem;
+  }
+  
+  .proyectos-filtros {
+    padding: 0 1.5rem;
+  }
+  
+  .proyectos-full-grid {
+    padding: 0 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .proyectos-bottom-cta {
+    margin: 0 1.5rem;
   }
   
   .proyectos-stats {
@@ -521,21 +604,18 @@
   
   .filtros-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 1rem;
   }
   
   .categorias-filtros {
     flex-direction: column;
+    text-align: left;
   }
   
   .filtro-btn {
     justify-content: space-between;
-  }
-  
-  .proyectos-full-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
   }
   
   .proyecto-actions {
@@ -554,6 +634,19 @@
   
   .proyectos-page-header h1 {
     font-size: 2rem;
+  }
+  
+  .proyectos-filtros {
+    padding: 0 1rem;
+  }
+  
+  .proyectos-full-grid {
+    padding: 0 1rem;
+  }
+  
+  .proyectos-bottom-cta {
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
   }
   
   .proyecto-content {

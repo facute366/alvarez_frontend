@@ -229,19 +229,34 @@
 
 .red-social:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(21, 78, 162, 0.3);
 }
 
 .facebook {
   background: #1877f2;
 }
 
+.facebook:hover {
+  background: #166fe5;
+  color: var(--blanco);
+}
+
 .instagram {
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
+.instagram:hover {
+  background: linear-gradient(45deg, #e8842a, #dd5f33, #d3243a, #c31e5d, #b3157f);
+  color: var(--blanco);
+}
+
 .whatsapp {
   background: #25d366;
+}
+
+.whatsapp:hover {
+  background: #20c157;
+  color: var(--blanco);
 }
 
 /* ===========================

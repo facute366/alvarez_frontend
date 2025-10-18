@@ -1,11 +1,37 @@
 import "../styles/footer.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { scroller } from 'react-scroll';
 
 export default function Footer() {
   const location = useLocation();
+  const navigate = useNavigate();
+  
   const hideFooter =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/carrusel-admin");
+
+  // 👉 función para hacer scroll suave incluso si estás en otra ruta
+  const goTo = (id) => {
+    const opts = { smooth: true, duration: 600, offset: -80 };
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => scroller.scrollTo(id, opts), 100);
+    } else {
+      scroller.scrollTo(id, opts);
+    }
+  };
+
+  // 👉 función para ir a proyectos page
+  const goToProyectos = () => {
+    navigate("/proyectos");
+    setTimeout(() => {
+      const element = document.getElementById("proyectos-page");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+  };
 
   if (hideFooter) return null; // No renderiza nada en esas rutas
 
@@ -30,7 +56,7 @@ export default function Footer() {
             <div className="footer-brand">
               <a href="/" className="footer-logo" aria-label="Inicio">
                 <img
-                  src="/assets/img/logo_horizontal-removebg.png"
+                  src="/assets/img/logo-sf-white.png"
                   alt="Alvarez Construcciones"
                 />
               </a>
@@ -76,10 +102,10 @@ export default function Footer() {
             <div className="footer-section">
               <h3>Servicios</h3>
               <ul className="footer-links">
-                <li><a href="#servicios">Construcción en Seco</a></li>
-                <li><a href="#servicios">Ampliaciones</a></li>
-                <li><a href="#servicios">Locales Comerciales</a></li>
-                <li><a href="#servicios">Revestimientos</a></li>
+                <li><button type="button" onClick={() => goTo('servicios')}>Construcción en Seco</button></li>
+                <li><button type="button" onClick={() => goTo('servicios')}>Ampliaciones</button></li>
+                <li><button type="button" onClick={() => goTo('servicios')}>Locales Comerciales</button></li>
+                <li><button type="button" onClick={() => goTo('servicios')}>Revestimientos</button></li>
               </ul>
             </div>
 
@@ -87,10 +113,10 @@ export default function Footer() {
             <div className="footer-section">
               <h3>Enlaces</h3>
               <ul className="footer-links">
-                <li><a href="/proyectos">Proyectos</a></li>
-                <li><a href="#nosotros">Nosotros</a></li>
-                <li><a href="#beneficios">Beneficios</a></li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><button type="button" onClick={goToProyectos}>Proyectos</button></li>
+                <li><button type="button" onClick={() => goTo('sobre-nosotros')}>Nosotros</button></li>
+                <li><button type="button" onClick={() => goTo('beneficios')}>Beneficios</button></li>
+                <li><button type="button" onClick={() => goTo('contacto')}>Contacto</button></li>
               </ul>
             </div>
 
@@ -141,11 +167,6 @@ export default function Footer() {
             <p className="copyright">
               © 2025 Alvarez Construcciones en Seco. Todos los derechos reservados.
             </p>
-            <div className="footer-bottom-links">
-              <a href="#privacidad">Política de Privacidad</a>
-              <span className="separator">|</span>
-              <a href="#terminos">Términos y Condiciones</a>
-            </div>
           </div>
         </div>
       </div>

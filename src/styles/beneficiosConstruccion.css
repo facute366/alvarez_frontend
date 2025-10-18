@@ -164,6 +164,7 @@
    Sección de Comparación
    =========================== */
 .comparacion-section {
+  margin-top: 4rem;
   margin-bottom: 5rem;
   position: relative;
   z-index: 1;
@@ -394,6 +395,84 @@
 /* ===========================
    Responsive Design - MEJORADO
    =========================== */
+
+/* Notebooks y dispositivos medianos (769px - 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .beneficios-grid {
+    padding: 0 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+    justify-content: center;
+  }
+}
+
+/* Desktop pequeño (1201px - 1400px) */
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .beneficios-grid {
+    padding: 0 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+    justify-content: center;
+  }
+}
+
+/* Desktop grande (más de 1400px) */
+@media (min-width: 1401px) {
+  .beneficios-grid {
+    padding: 0 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1700px;
+    margin: 0 auto;
+    gap: 3.5rem;
+  }
+  
+  .beneficio-item {
+    padding: 3.5rem 3rem;
+    min-height: 440px;
+  }
+  
+  .beneficio-content h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.8rem;
+  }
+  
+  .beneficio-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  
+  .beneficio-icon {
+    width: 85px;
+    height: 85px;
+    margin-bottom: 2.2rem;
+  }
+  
+  .beneficio-icon i {
+    font-size: 2.1rem;
+  }
+}
+
+/*Desktop pequeño*/
+   @media (max-width: 1024px) {
+  .beneficios-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .beneficios-cta {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  
+  .cta-stats {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .comparacion-grid {
+    gap: 2rem;
+  }
+}
+
 
 /* Tablets grandes */
 @media (max-width: 1024px) {
